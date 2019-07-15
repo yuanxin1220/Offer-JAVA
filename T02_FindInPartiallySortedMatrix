@@ -1,0 +1,60 @@
+package offer;
+
+public class T02_FindInPartiallySortedMatrix {
+	public boolean Find(int[][] matrix,int rows,int columns,int number)
+	{
+		boolean found=false;
+		if(matrix!=null&&rows>0&&columns>0) {
+			int row=0;
+			int column=columns-1;
+			while(row<rows&&column>=0)
+			{				
+				if(matrix[row][column]==number)
+				{
+					found=true;
+					break;
+				}
+				else if(matrix[row][column]>number)
+					--column;
+				else
+					++row;
+			}
+		}
+		return found;
+	}
+	
+	//===============================测试用例=============================	
+	public void Test(String testName,int[][] matrix,int rows,int columns,int number,boolean expected)
+	{
+		if(testName!=null)
+			System.out.print(testName+"begins:");
+		
+		boolean result=Find(matrix,rows,columns,number);
+		if(result==expected)
+			System.out.println("passed.");
+		else
+			System.out.println("Failed.");
+	}
+	
+	//要查找的数在数组中
+	public void Test1()
+	{
+		int[][] matrix= {{1, 2, 8, 9}, {2, 4, 9, 12}, {4, 7, 10, 13}, {6, 8, 11, 15}};
+		Test("Test1 ",matrix,4,4,7,true);
+	}
+	
+	//要查找的数不在数组中
+	public void Test2()
+	{
+		int[][] matrix= {{1, 2, 8, 9}, {2, 4, 9, 12}, {4, 7, 10, 13}, {6, 8, 11, 15}};
+		Test("Test2 ",matrix,4,4,5,false);
+	}
+	
+	//鲁棒性测试，输入
+	public void Test3()
+	{
+		int[][] matrix= null;
+		Test("Test3 ",matrix,0,0,16,false);
+	}
+
+}
