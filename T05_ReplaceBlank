@@ -1,0 +1,119 @@
+package offer;
+
+public class T05_ReplaceBlank{
+	public String ReplaceBlank(StringBuilder str) {
+		if(str==null)
+			return null;
+		int oldLen=str.length();
+		for(int i=0;i<oldLen;i++) {
+			if(str.charAt(i)==' ')
+			{
+				str.append("12");				
+			}
+		}
+		
+	int i=oldLen-1;
+	int j=str.length()-1;
+	
+	while(i>=0&&j>i) {
+		char c=str.charAt(i);
+		i--;
+		
+		if(c==' ') {
+			str.setCharAt(j--, '0');
+			str.setCharAt(j--, '2');
+			str.setCharAt(j--, '%');
+		}else {
+			str.setCharAt(j--, c);
+		}
+	}
+	return str.toString();
+	}
+	
+	//==============测试代码================
+	void Test(String testName,StringBuilder str,String expected)
+	{
+		if(testName!=null)
+			System.out.print(testName+" begins: ");
+		
+		ReplaceBlank(str);
+		
+		if(expected==null && str==null)
+			System.out.println("passed.");
+		else if(expected==null && str!=null)
+			System.out.println("failed.");
+		else if(str.toString().equals(expected))
+			System.out.println("passed.");
+		else
+			System.out.println("failed.");
+	}
+	
+	//空格在中间
+	public void Test1()
+	{
+		StringBuilder str=new StringBuilder();
+    	str.append("hello world");
+    	Test("Test1",str,"hello%20world");
+	}
+
+	//空格在开头
+	public void Test2()
+	{
+		StringBuilder str=new StringBuilder();
+    	str.append(" helloworld");
+    	Test("Test2",str,"%20helloworld");
+	}
+	
+	//空格在末尾
+	public void Test3()
+	{
+		StringBuilder str=new StringBuilder();
+    	str.append("helloworld ");
+    	Test("Test3",str,"helloworld%20");
+	}
+
+	//连续两个空格
+	public void Test4()
+	{
+		StringBuilder str=new StringBuilder();
+    	str.append("hello  world");
+    	Test("Test4",str,"hello%20%20world");
+	}
+
+	//传入null
+	public void Test5()
+	{
+    	Test("Test5",null,null);
+	}
+
+	//传入内容为空
+	public void Test6()
+	{
+		StringBuilder str=new StringBuilder();
+    	Test("Test6",str,"");
+	}
+	
+	//传入一个空格
+	public void Test7()
+	{
+		StringBuilder str=new StringBuilder();
+	    str.append(" ");
+	    Test("Test7",str,"%20");
+	}
+	
+	//传入字符没有空格
+	public void Test8()
+	{
+		StringBuilder str=new StringBuilder();
+	    str.append("helloworld");
+	    Test("Test8",str,"helloworld");
+	}
+	
+	//传入字符全是空格
+	public void Test9()
+	{
+		StringBuilder str=new StringBuilder();
+	    str.append("   ");
+	    Test("Test9",str,"%20%20%20");
+	}
+}
