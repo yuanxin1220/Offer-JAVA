@@ -1,0 +1,92 @@
+package offer;
+import java.util.*;
+
+public class T06_PrintListInReversedOrder {
+	//利用栈“后进先出”的特点实现从尾到头打印链表
+	public static void PrintListRerversely_Tteratively(ListNode pHead) {
+		Stack<ListNode> nodes=new Stack<>();
+		ListNode pNode=pHead;
+		while(pNode!=null)
+		{
+			nodes.push(pNode);
+			pNode=pNode.pNext;
+		}
+		while(!nodes.empty())
+		{
+			pNode=nodes.pop();
+			System.out.print(pNode.nKey);
+		}
+	}
+	
+	//递归实现从尾到头，本质是一个栈结构
+	public static void PrintReversely_Recursively(ListNode pHead) {
+		if(pHead!=null) {
+			if(pHead.pNext!=null)
+				PrintReversely_Recursively(pHead.pNext);
+			System.out.print(pHead.nKey);
+		}
+	}
+	
+	public static void PrintList(ListNode pHead) {
+		ListNode pNode=pHead;
+		while(pNode!=null)
+		{			
+			System.out.print(pNode.nKey);
+			pNode=pNode.pNext;
+		}
+		System.out.println();
+	}
+	
+	//测试源码
+	public static void Test(ListNode pHead) {
+		System.out.println("输入的链表：");
+		PrintList(pHead);
+		System.out.println("栈实现从尾到头：");
+		PrintListRerversely_Tteratively(pHead);
+		System.out.println();
+		System.out.println("递归实现从尾到头：");
+		PrintReversely_Recursively(pHead);
+		System.out.println();
+	}
+
+	
+	//1->2->3->4->5
+	public static void Test1()
+	{
+		System.out.println("Test1 begins.");
+		
+		T06_LinkedList linkList=new T06_LinkedList();
+		ListNode root=new ListNode(1);
+		linkList.AddToTail(root, 2);
+		linkList.AddToTail(root, 3);
+		linkList.AddToTail(root, 4);
+		
+		Test(root);		
+	}	
+	
+	//只有一个结点的链表：1
+	public static void Test2()
+	{
+		System.out.println("Test2 begins.");
+		
+		T06_LinkedList linkList=new T06_LinkedList();
+		ListNode root=new ListNode(1);
+		
+		Test(root);		
+	}
+	
+	//空链表：null
+	public static void Test3()
+	{
+		System.out.println("Test3 begins.");
+		
+		Test(null);		
+	}
+	
+	public static void main(String[] args) {
+		Test1();
+		//Test2();
+		//Test3();
+	}
+
+}
