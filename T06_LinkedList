@@ -1,0 +1,26 @@
+package offer;
+
+class ListNode
+{
+	int nKey;
+	public ListNode pNext;
+	public ListNode(int val){
+		this.nKey=val;
+		pNext=null;
+	}
+}
+
+public class T06_LinkedList {
+	public void AddToTail(ListNode pHead, int value) {
+		ListNode pNew=new ListNode(value);
+		if(pHead==null)
+			pHead=pNew;
+		else {
+			ListNode pNode=pHead;
+			while(pNode.pNext!=null)
+				pNode=pNode.pNext;
+			pNode.pNext=pNew;
+		}
+	}
+	
+}
