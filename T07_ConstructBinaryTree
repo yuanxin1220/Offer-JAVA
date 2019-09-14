@@ -1,0 +1,163 @@
+package offer;
+
+
+
+public class T07_ConstructBinaryTree {
+	
+	public BinaryTreeNode Construct(int preorder[],int inorder[]) {
+		if(preorder==null || inorder==null||preorder.length<=0||inorder.length<=0||preorder.length!=inorder.length)
+			throw new RuntimeException("数组不符合规范！");
+		return ConstructCore(preorder,0,preorder.length-1,
+				inorder,0,inorder.length-1);
+	}
+	public BinaryTreeNode ConstructCore(int preorder[],int startPreorder,int endPreorder,
+										int inorder[],int startInorder, int endInorder)
+	{
+		//停止递归的条件
+		if(startPreorder>endPreorder||startInorder>endInorder)
+            return null;
+		
+		BinaryTreeNode root=new BinaryTreeNode(preorder[startPreorder]);
+		
+		//前向序列和中序序列不匹配
+		if(startPreorder==endPreorder && startInorder==endInorder) {
+			if(preorder[startPreorder]!=inorder[startInorder])
+				throw new RuntimeException("数组不符合规范！");
+			return root;
+		}
+		
+		for(int i=startInorder;i<=endInorder;i++)
+		{
+			if(preorder[startPreorder]==inorder[i]) {
+				//其中(i-startInorder)为中序遍历左子树结点数
+				//左子树
+				root.m_pleft=ConstructCore(preorder,startPreorder+1,startPreorder+(i-startInorder),
+						inorder,startInorder,i-1);
+				//右子树
+				root.m_pright=ConstructCore(preorder,startPreorder+(i-startInorder)+1,endPreorder,
+						inorder,i+1,endInorder);
+			}
+		}
+		return root;
+	}
+	
+	
+	// ======== 测试代码 ========
+	public void Test(String testName,int preorder[],int inorder[],int length) {
+		if(testName!=null)
+			System.out.println(testName+" begins");
+		
+		System.out.print("The preorder sequence is: ");
+		for (int i=0;i<preorder.length;i++)
+			System.out.print(preorder[i]+" ");
+		System.out.println();
+		
+		System.out.print("The inorder sequence is: ");
+		for (int i=0;i<inorder.length;i++)
+			System.out.print(inorder[i]+" ");
+		System.out.println();
+		
+	    BinaryTreeNode treeNode=Construct(preorder, inorder);
+	    T07_BinaryTree print=new T07_BinaryTree();
+	    print.printTree(treeNode);		
+	}
+
+	// ======== 普通二叉树 ========
+	// 不完全二叉树
+	//	              1
+	//	           /     \
+	//	          2       3  
+	//	         /       / \
+	//	        4       5   6
+	//	         \         /
+	//	          7       8
+	public void Test1()
+	{
+		int length=8;
+		int[] preorder = {1, 2, 4, 7, 3, 5, 6, 8};
+	    int[] inorder = {4, 7, 2, 1, 5, 3, 8, 6};
+	    Test("Test1",preorder,inorder,length);
+	}
+	
+	// 完全二叉树
+	//  	1
+	//   /     \
+	//  2       3  
+	// / \     / \
+	//4   5   6   7
+	public void Test2()
+	{
+		int length=7;
+		int[] preorder = {1, 2, 4, 5, 3, 6, 7};
+	    int[] inorder = {4, 2, 5, 1, 6, 3, 7};
+	    Test("Test2",preorder,inorder,length);
+	}
+	
+	// ======== 特殊二叉树 ========
+	// 所有结点都没有右子结点的二叉树
+	//  	  1
+	// 		 / 
+	//		2   
+	//	   / 
+	//	  3 
+	//	 /
+	//	4
+	// /
+	//5
+	public void Test3()
+	{
+		int length=5;
+		int[] preorder = {1, 2, 3, 4, 5};
+	    int[] inorder = {5, 4, 3, 2, 1};
+	    Test("Test3",preorder,inorder,length);
+	}
+	
+	// 所有结点都没有左子结点
+	//  1
+	//   \ 
+	//    2   
+	//     \ 
+	//      3 
+	//       \
+	//        4
+	//         \
+	//          5
+	public void Test4()
+	{
+		int length=5;
+		int[] preorder = {1, 2, 3, 4, 5};
+	    int[] inorder = {1, 2, 3, 4, 5};
+	    Test("Test4",preorder,inorder,length);
+	}
+	
+	// ======== 特殊输入测试 ========
+	//输入空指针
+	public void Test5()
+	{
+		int length=0;
+		int[] preorder = {};
+	    int[] inorder = {};
+	    Test("Test5",preorder,inorder,length);
+	}
+	
+	//输入的两个序列不匹配
+	public void Test6()
+	{
+		int length=7;
+		int[] preorder = {1, 2, 4, 5, 3, 6, 7};
+	    int[] inorder = {4, 2, 8, 1, 6, 3, 7};
+	    Test("Test6",preorder,inorder,length);
+	}
+	
+	
+	public static void main(String[] args) {
+		T07_ConstructBinaryTree main=new T07_ConstructBinaryTree();
+		main.Test1();
+		//main.Test2();
+		//main.Test3();
+		//main.Test4();
+		//main.Test5();
+		//main.Test6();
+		
+	}
+}
