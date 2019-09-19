@@ -1,0 +1,158 @@
+package test;
+
+public class T08_NextNodeInBinaryTrees {
+
+	public static BinaryTreeNode GetNext(BinaryTreeNode pNode) 
+	{
+		if(pNode==null)
+			return null;
+		
+		BinaryTreeNode pNext=null;
+		
+		if(pNode.m_pRight!=null)
+		{
+			BinaryTreeNode pRight=pNode.m_pRight;
+			while(pRight.m_pLeft!=null)
+				pRight=pRight.m_pLeft;
+			pNext=pRight;
+		}
+		else if(pNode.m_pParent!=null)
+		{
+			BinaryTreeNode pCurrent=pNode;
+			BinaryTreeNode pParent=pNode.m_pParent;
+			while(pParent!=null && pParent.m_pRight==pCurrent)
+			{
+				pCurrent=pParent;
+				pParent=pCurrent.m_pParent;				
+			}
+			pNext=pParent;
+		}
+		return pNext;
+	}
+	
+	// ======== 测试代码 ========
+	public static void Test(String testName,BinaryTreeNode pNode,BinaryTreeNode expected)
+	{
+		if(testName!=null)
+			System.out.print(testName);
+		if(pNode!=null)
+			System.out.print(" begins: node "+pNode.m_nValue+" -> ");
+		else
+			System.out.print(" begins: node "+pNode+" -> ");
+			
+		//T08_BinaryTree result=new T08_BinaryTree();
+		BinaryTreeNode pNext=GetNext(pNode);
+		if(pNext==expected)
+			System.out.println("Passed.");
+		else
+			System.out.println("FAILED.");
+	}
+	
+	// 普通二叉树
+	//  	8
+	//  6      10
+	// 5 7    9  11	
+	public static void Test1_7()
+	{
+		T08_BinaryTree main=new T08_BinaryTree();
+		
+		BinaryTreeNode pNode8=main.CreateBinaryTreeNode(8);
+		BinaryTreeNode pNode6=main.CreateBinaryTreeNode(6);
+		BinaryTreeNode pNode10=main.CreateBinaryTreeNode(10);
+		BinaryTreeNode pNode5=main.CreateBinaryTreeNode(5);
+		BinaryTreeNode pNode7=main.CreateBinaryTreeNode(7);
+		BinaryTreeNode pNode9=main.CreateBinaryTreeNode(9);
+		BinaryTreeNode pNode11=main.CreateBinaryTreeNode(11);
+
+		main.ConnectTreeNodes(pNode8,pNode6,pNode10);
+		main.ConnectTreeNodes(pNode6,pNode5,pNode7);
+		main.ConnectTreeNodes(pNode10,pNode9,pNode11);
+		
+		main.printTree(pNode8);
+
+		Test("Test1",pNode8,pNode9);
+		Test("Test2",pNode6,pNode7);
+		Test("Test3",pNode10,pNode11);
+		Test("Test4",pNode5,pNode6);
+		Test("Test5",pNode7,pNode8);
+		Test("Test6",pNode9,pNode10);
+		Test("Test7",pNode11,null);
+	}
+	
+	// 特殊二叉树： 所有节点都没有右子节点的二叉树
+	//  	 5
+	//	   4
+	//	 3
+	// 2
+	public static void Test8_11()
+	{
+		T08_BinaryTree main=new T08_BinaryTree();
+		
+		BinaryTreeNode pNode5=main.CreateBinaryTreeNode(5);
+		BinaryTreeNode pNode4=main.CreateBinaryTreeNode(4);
+		BinaryTreeNode pNode3=main.CreateBinaryTreeNode(3);
+		BinaryTreeNode pNode2=main.CreateBinaryTreeNode(2);
+
+		main.ConnectTreeNodes(pNode5,pNode4,null);
+		main.ConnectTreeNodes(pNode4,pNode3,null);
+		main.ConnectTreeNodes(pNode3,pNode2,null);
+		
+		main.printTree(pNode5);
+
+		Test("Test8",pNode5,null);
+		Test("Test9",pNode4,pNode5);
+		Test("Test10",pNode3,pNode4);
+		Test("Test11",pNode2,pNode3);
+	}
+	
+	// 特殊二叉树： 所有节点都没有左子节点的二叉树
+	//  2
+	//   3
+	//    4
+	//     5
+	public static void Test12_15()
+	{
+		T08_BinaryTree main=new T08_BinaryTree();
+		
+		BinaryTreeNode pNode2=main.CreateBinaryTreeNode(2);
+		BinaryTreeNode pNode3=main.CreateBinaryTreeNode(3);
+		BinaryTreeNode pNode4=main.CreateBinaryTreeNode(4);
+		BinaryTreeNode pNode5=main.CreateBinaryTreeNode(5);
+
+		main.ConnectTreeNodes(pNode2,null,pNode3);
+		main.ConnectTreeNodes(pNode3,null,pNode4);
+		main.ConnectTreeNodes(pNode4,null,pNode5);
+		
+		main.printTree(pNode2);
+
+		Test("Test12",pNode5,null);
+		Test("Test13",pNode4,pNode5);
+		Test("Test14",pNode3,pNode4);
+		Test("Test15",pNode2,pNode3);
+	}	
+
+	// 特殊二叉树： 只有一个根结点
+	public static void Test16()
+	{
+		T08_BinaryTree main=new T08_BinaryTree();
+		BinaryTreeNode pNode5=main.CreateBinaryTreeNode(5);
+		main.printTree(pNode5);
+		Test("Test16",pNode5,null);
+	}
+	
+	// 特殊二叉树： 根结点为空
+	public static void Test17()
+	{
+		T08_BinaryTree main=new T08_BinaryTree();
+		main.printTree(null);
+		Test("Test17",null,null);
+	}
+	
+	public static void main(String[] args) {
+		//Test1_7();
+		//Test8_11();
+		//Test12_15();
+		Test16();
+		Test17();
+	}
+}
