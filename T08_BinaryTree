@@ -1,0 +1,68 @@
+package test;
+
+class BinaryTreeNode{
+	int		m_nValue;
+	BinaryTreeNode m_pLeft;
+	BinaryTreeNode m_pRight;
+	BinaryTreeNode m_pParent;
+}
+
+public class T08_BinaryTree {
+	
+	// ======== 二叉树的构建 ========
+	public BinaryTreeNode CreateBinaryTreeNode(int value) 
+	{
+		BinaryTreeNode pNode=new BinaryTreeNode();
+		pNode.m_nValue=value;
+		pNode.m_pLeft=null;
+		pNode.m_pRight=null;
+		pNode.m_pParent=null;
+		return pNode;
+	}
+	
+	public void ConnectTreeNodes(BinaryTreeNode pParent,BinaryTreeNode pLeft,BinaryTreeNode pRight)
+	{
+		if(pParent!=null)
+		{
+			pParent.m_pLeft=pLeft;
+			pParent.m_pRight=pRight;
+
+			if(pLeft!=null)
+				pLeft.m_pParent=pParent;
+			if(pRight!=null)
+				pRight.m_pParent=pParent;
+		}
+	}
+		
+	// ======== 二叉树的打印 ========
+	public void printTree(BinaryTreeNode head)
+	{
+		System.out.println("Binary Tree:");
+		printInorder(head,0,"H",17);
+		System.out.println();
+	}
+	
+	public void printInorder(BinaryTreeNode head,int height,String to,int len) {
+		if(head==null)
+			return;
+		printInorder(head.m_pRight,height+1,"v",len);
+		String val=to+head.m_nValue+to;
+		int lenM=val.length();
+		int lenL=(len-lenM)/2;
+		int lenR=len-lenM-lenL;
+		val=getSpace(lenL)+val+getSpace(lenR);
+		System.out.println(getSpace(height*len)+val);
+		printInorder(head.m_pLeft,height+1,"^",len);		
+	}
+	
+	public String getSpace(int num) {
+		String space=" ";
+		StringBuffer buf=new StringBuffer("");
+		for (int i=0;i<num;i++)
+			buf.append(space);
+		return buf.toString();
+	}
+	
+
+	
+}
