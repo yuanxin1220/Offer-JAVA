@@ -1,0 +1,37 @@
+package offer;
+
+
+public class T09_QueueWithTwoStacks {
+	
+	public static void Test(Character actual,Character expected) {
+		if(actual==expected)
+			System.out.println("Tested passed.");
+		else
+			System.out.println("Tested failed.");
+	}
+	
+	public static void main(String[] args) {
+		T09_CQueue queue =new T09_CQueue();
+		
+		queue.appendTail('a');
+		queue.appendTail('b');
+		queue.appendTail('c');
+		
+		Character head=queue.deleteHead();
+		Test(head,'a');
+		
+		head=queue.deleteHead();
+		Test(head,'b');
+		
+		queue.appendTail('d');
+		head=queue.deleteHead();
+		Test(head,'c');
+		
+		queue.appendTail('e');
+		head=queue.deleteHead();
+		Test(head,'d');
+
+		head=queue.deleteHead();
+		Test(head,'e');
+	}
+}
