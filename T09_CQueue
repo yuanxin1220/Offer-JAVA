@@ -1,0 +1,31 @@
+package offer;
+import java.util.Stack;
+public class T09_CQueue {
+	private Stack<Character> stack1=new Stack<Character>();
+	private Stack<Character> stack2=new Stack<Character>();
+	
+	
+	public void appendTail(Character element)
+	{
+		stack1.push(element);
+	}
+	
+	public Character deleteHead()
+	{
+		if(stack2.size()<=0)
+		{
+			while(stack1.size()>0)
+			{
+				Character data=stack1.pop();
+				stack2.push(data);
+			}			
+		}
+		
+		if(stack2.size()==0)
+			System.out.println("queue is empty!");
+		
+		Character head=stack2.pop();
+		return head;
+	}
+	
+}
