@@ -33,5 +33,9 @@ public class T09_QueueWithTwoStacks {
 
 		head=queue.deleteHead();
 		Test(head,'e');
+		
+
+		head=queue.deleteHead();
+		Test(head,null);
 	}
 }
