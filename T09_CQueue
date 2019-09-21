@@ -22,7 +22,10 @@ public class T09_CQueue {
 		}
 		
 		if(stack2.size()==0)
+		{
 			System.out.println("queue is empty!");
+			return null;
+		}
 		
 		Character head=stack2.pop();
 		return head;
