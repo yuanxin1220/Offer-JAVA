@@ -1,0 +1,77 @@
+package offer;
+import java.util.LinkedList;
+import java.util.Queue;
+
+public class T09_StackWithTwoQueues {
+	private LinkedList<Character> queue1=new LinkedList<Character>();
+	private LinkedList<Character> queue2=new LinkedList<Character>();
+	
+	public void append(Character element)
+	{
+		if(queue2.size()==0)
+			queue1.offer(element);
+		else if(queue1.size()==0)
+			queue2.offer(element);
+		else
+			System.out.print("There are some operations wrong!");
+			
+	}
+	
+	public Character deleteHead()
+	{
+		if(queue1.size()==0 && queue2.size()==0)
+		{
+			System.out.println("stack is empty!");
+			return null;			
+		}
+		else if(queue1.size()>0 && queue2.size()==0)
+		{
+			while(queue1.size()!=1)
+			{
+				Character tmp=queue1.poll();
+				queue2.add(tmp);
+			}
+			return queue1.poll();
+		}
+		else if(queue1.size()==0 && queue2.size()>0)
+		{
+			while(queue2.size()!=1)
+			{
+				Character tmp=queue2.poll();
+				queue1.add(tmp);
+			}
+			return queue2.poll();
+		}
+		else
+		{
+			System.out.println("There are some operations wrong!");
+			return null;
+		}
+	}
+	
+	public static void main(String[] args)
+	{
+		T09_StackWithTwoQueues stack=new T09_StackWithTwoQueues();
+
+		stack.append('a');
+		stack.append('b');
+		stack.append('c');
+		
+		Character head=stack.deleteHead();
+		System.out.println(head);
+		
+		head=stack.deleteHead();
+		System.out.println(head);
+
+		stack.append('d');
+		head=stack.deleteHead();
+		System.out.println(head);
+		
+		head=stack.deleteHead();
+		System.out.println(head);
+
+		head=stack.deleteHead();
+		System.out.println(head);
+	}
+	
+}
