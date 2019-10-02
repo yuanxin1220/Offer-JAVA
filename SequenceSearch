@@ -1,0 +1,21 @@
+package Search;
+
+public class SequenceSearch {
+	//顺序查找
+	public int SeqSearch(int[] a,int value)
+	{
+		for(int i=0;i<a.length;i++)
+			if(a[i]==value)
+				return i;
+		return -1;
+	}
+	
+	public static void main(String[] args) {
+		int[] a= {1,3,5,7,9,11};
+		
+		SequenceSearch seqResult=new SequenceSearch();
+        System.out.println(seqResult.SeqSearch(a, 11));
+                
+	}
+	
+}
