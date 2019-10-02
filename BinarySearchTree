@@ -1,0 +1,221 @@
+package Search;
+import java.util.ArrayList;
+import java.util.List;
+
+public class BinarySearchTree {
+	
+	// 树的根结点
+	private TreeNode root=null;
+	//遍历节点列表
+	private List<TreeNode> nodelist=new ArrayList<TreeNode>();
+	
+	private class TreeNode{
+		private int key;
+		private int index;
+		private TreeNode leftChild;
+		private TreeNode rightChild;
+		private TreeNode parent;
+		
+		public TreeNode (int key,int index,TreeNode leftChild,TreeNode rightNode,TreeNode parent) 
+		{
+			this.key=key;
+			this.index=index;
+			this.leftChild=leftChild;
+			this.rightChild=rightNode;
+			this.parent=parent;
+		}
+		public int getKey() {
+			return key;
+		}
+		public int getIndex() {
+			return index;
+		}
+	}
+	
+	//查找
+	public TreeNode search(int value) {
+		TreeNode pNode=root;
+		while(pNode!=null && pNode.key!=value) {
+			if(pNode.key<value)
+				pNode=pNode.rightChild;
+			else
+				pNode=pNode.leftChild;
+		}
+		return pNode;		
+	}
+		
+	//将更多关键字插入到二叉查找树
+	public void insert(int value,int index)
+	{
+		TreeNode parentNode=null;
+		TreeNode newNode=new TreeNode(value,index,null,null,null);
+		TreeNode pNode=root;
+		if(root==null)
+		{
+			root=newNode;
+			return;
+		}
+		while(pNode!=null) {
+			parentNode=pNode;
+			if(value<pNode.key)
+				pNode=pNode.leftChild;
+			else if(value>pNode.key)
+				pNode=pNode.rightChild;
+			else
+				//树中已存在匹配给定关键字的节点，直接返回
+				return;
+		}
+		if(value<parentNode.key)
+		{
+			parentNode.leftChild=newNode;
+			newNode.parent=parentNode;
+		}
+		else
+		{
+			parentNode.rightChild=newNode;
+			newNode.parent=parentNode;
+		}
+	}
+	
+	
+	//判断二叉查找树是否为空
+	public boolean isEmpty()
+	{
+		if(root==null)
+			return true;
+		else
+			return false;
+	}
+	//自定义异常：空树不可进行删除操作
+	public void TreeEmpty() throws Exception{
+		if(isEmpty()) 
+			throw new Exception("树为空！");		
+	}	
+	//获取二叉查找树中的最小关键字节点
+	public TreeNode minElemNode(TreeNode node) throws Exception{
+		if(node==null)
+			throw new Exception("树为空！");
+		TreeNode pNode=node;
+		while (pNode.leftChild!=null)
+			pNode=pNode.leftChild;
+		return pNode;
+	}
+	//获取二叉查找树中的最大关键字节点
+	public TreeNode maxElemNode(TreeNode node) throws Exception{
+		if(node==null)
+			throw new Exception("树为空！");
+		TreeNode pNode=node;
+		while (pNode.rightChild!=null)
+			pNode=pNode.rightChild;
+		return pNode;
+	}
+	//获取给定节点中序遍历下的后继节点
+	public TreeNode successor(TreeNode node) throws Exception{
+		if(node==null)
+			return null;
+		
+		//若该节点的右子树不为空，则其后继节点就是右子树中最小关键字节点
+		if (node.rightChild!=null)
+			return minElemNode(node.rightChild);
+		//若该节点的右子树为空
+		TreeNode parentNode=node.parent;
+		while(parentNode!=null && node==parentNode.rightChild)
+		{
+			node=parentNode;
+			parentNode=parentNode.parent;
+		}
+		return parentNode;
+	}
+	//获取给定节点中序遍历下的前驱节点
+	public TreeNode precessor(TreeNode node) throws Exception{
+		if (node==null)
+			return null;
+		
+		//若该节点的左子树不为空，则前驱节点是左子树中的最大关键字节点
+		if(node.leftChild!=null)
+			return maxElemNode(node.leftChild);
+		//若该节点左子树为空
+		TreeNode parentNode=node.parent;
+		while(parentNode!=null && node==parentNode.leftChild) {
+			node=parentNode;
+			parentNode=parentNode.parent;
+		}
+		return parentNode;
+	}	
+	//从二叉查找树删除匹配给定关键字的树节点
+	public void delete(int key) throws Exception{
+		TreeNode pNode=search(key);
+		if(pNode==null)
+			throw new Exception("树中不存在要删除的关键字！");
+		delete(pNode);
+	}
+	//从二叉查找树中删除给定的节点
+	private void delete(TreeNode pNode) throws Exception{
+		if(pNode==null)
+			return;
+		//该节点既无左子节点也无右子节点
+		if(pNode.leftChild==null && pNode.rightChild==null)
+		{
+			TreeNode parentNode=pNode.parent;
+			if(pNode==parentNode.leftChild)
+				parentNode.leftChild=null;
+			else
+				parentNode.rightChild=null;
+			return;
+		}
+		//该节点左子节点为空，右子节点非空
+		if(pNode.leftChild==null && pNode.rightChild!=null)
+		{
+			TreeNode parentNode=pNode.parent;
+			if(pNode==parentNode.leftChild) {
+				parentNode.leftChild=pNode.rightChild;
+				pNode.rightChild.parent=parentNode;
+			}else
+			{
+				parentNode.rightChild=pNode.rightChild;
+				pNode.rightChild.parent=parentNode;
+			}
+		}
+		//该节点左子节点非空，右子节点为空
+		if(pNode.leftChild!=null && pNode.rightChild==null)
+		{
+			TreeNode parentNode=pNode.parent;
+			if(pNode==parentNode.leftChild) {
+				parentNode.leftChild=pNode.leftChild;
+				pNode.leftChild.parent=parentNode;
+			}else
+			{
+				parentNode.rightChild=pNode.leftChild;
+				pNode.leftChild.parent=parentNode;
+			}
+			return;
+		}
+		//该节点左右子节点均非空，删除后继节点，用后继节点代替该节点
+		TreeNode successorNode=successor(pNode);
+		delete(successorNode);
+		pNode.key=successorNode.key;
+	}
+	
+	
+	public static void main(String[] args)
+	{
+		try {
+			BinarySearchTree bst=new BinarySearchTree();
+			//根据给定数组创建二叉树
+			int[] keys=new int[] {15, 6, 18, 3, 7, 13, 20, 2, 9, 4};
+			for (int i=0;i<keys.length;i++)
+				bst.insert(keys[i],i);
+			//查找
+			System.out.println(bst.search(18).getIndex());
+			//二叉树的节点删除
+			bst.delete(6);
+			//查找
+			System.out.println(bst.search(18).getIndex());
+		}
+		catch (Exception e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		}
+	}
+	
+}
