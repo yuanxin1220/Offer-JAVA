@@ -1,0 +1,133 @@
+
+package Search;
+
+import java.util.Arrays;
+
+public class BinarySearchAndVariations {
+		
+	//二分查找
+	public int BinarySearch1(int[] a,int value)
+	{
+		int start,end,mid;
+		start=0;
+		end=a.length-1;
+		while(start<=end)
+		{
+			mid=start+(end-start)/2;
+			if (a[mid]==value)
+				return mid;
+			else if(a[mid]<value)
+				start=mid+1;
+			else
+				end=mid-1;			
+		}
+		return -1;
+	}
+	//二分查找 递归实现
+	public int BinarySearch2(int[] a,int value,int start,int end)
+	{
+		int mid=start+(end-start)/2;
+		if(start>end)
+			return -1;
+		if (a[mid]==value)
+			return mid;
+		else if(a[mid]>value)
+			return BinarySearch2(a,value,start,mid-1);
+		else
+			return BinarySearch2(a,value,mid+1,end);
+		
+	}
+	
+	//插值查找
+	public int InsertionSearch(int[] a,int value)
+	{
+		int start,end,mid;
+		start=0;
+		end=a.length-1;
+		while(start<end)
+		{
+			mid=start+(value-a[start])/(a[end]-a[start])*(end-start);
+			if (a[mid]==value)
+				return mid;
+			else if(a[mid]<value)
+				start=mid+1;
+			else
+				end=mid-1;			
+		}
+		return -1;
+	}
+	
+	//斐波那契查找
+	private int max_size=20;
+	//生成斐波那契数列
+	public int[] Fibonacci() {
+		int[] f=new int [max_size];
+		f[0]=1;
+		f[1]=1;
+		for (int i=2;i<max_size;i++)
+			f[i]=f[i-1]+f[i-2];
+		return f;
+	}
+	public int FibonacciSearch(int[] a,int value)
+	{
+		int start=0,end=a.length-1,mid=0;
+		int k=0;//斐波那契分割数值下标
+		int f[]=Fibonacci();//获得斐波那契数列
+		//获得斐波那契分割数值下标
+		while(end>f[k]-1)
+			k++;
+		
+		//利用java工具类Arrays构造新数组并指向数组a[]
+		int[] temp=Arrays.copyOf(a, f[k]);
+		
+		//对新构造数组进行元素补充
+		for(int i=end+1;i<temp.length;i++)
+			temp[i]=a[end];
+		
+		while(start<=end)
+		{
+			//由于前面有部分有f[k-1]个元素
+			mid=start+f[k-1]-1;
+			//关键字小于切割位置元素	继续在前部分查找
+			if(value<temp[mid]) {
+				/*全部元素=前部元素+后部元素
+				 * f[k]=f[k-1]+f[k-2]
+				 * 前部有f[k-1]个元素，可以继续拆分f[k-1]=f[k-2]+f[k-3]
+				 * 即在前f[k]的前部f[k-1]继续查找，故k--
+				 * 即下次循环mid=f[k-1-1]-1
+				 */
+				end=mid-1;
+				k--;
+			}
+			//关键字大于切割位置元素	则查找后半部分
+			else if(value>temp[mid]) {
+				/*全部元素=前部元素+后部元素
+				 * f[k]=f[k-1]+f[k-2]
+				 * 后部有k-2个元素，可以继续拆分f[k-2]=f[k-3]+f[k-4]
+				 * 即在f[k]的后部f[k-2]继续查找，故k-=2
+				 * 即下次循环mid=f[k-2-1]-1
+				 */
+				start=mid+1;
+				k-=2;
+			}
+			else {
+				if(mid<=end)
+					return mid;
+				else
+					return end;
+			}
+		}
+		return -1;
+	}
+	
+	public static void main(String[] args) {
+		int[] a= {1,3,5,7,9,11};
+	        
+        BinarySearchAndVariations binResult=new BinarySearchAndVariations();
+        System.out.println(binResult.BinarySearch1(a, 11));
+        System.out.println(binResult.BinarySearch2(a, 11, 0, a.length-1));
+        System.out.println(binResult.FibonacciSearch(a, 11));
+        
+	}
+
+}
