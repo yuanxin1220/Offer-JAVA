@@ -1,0 +1,213 @@
+package Sort;
+
+public class Sort {
+	public static void swap(int[] arr,int i,int j) {
+		int temp=arr[i];
+		arr[i]=arr[j];
+		arr[j]=temp;
+	}
+	
+	//冒泡排序
+	public static void bubbleSort(int[] arr) {
+		if(arr==null || arr.length==0)
+			return;
+		for(int i=0;i<arr.length-1;i++) {
+			for(int j=arr.length-1;j>i;j--) {
+				if(arr[j]<arr[j-1])
+					swap(arr,j-1,j);
+			}
+		}
+	}
+	
+	//选择排序
+	public static void selectSort(int[] arr) {
+		if(arr==null||arr.length==0)
+			return;
+		int minIndex=0;
+		for(int i=0;i<arr.length-1;i++) {	//只需比较n-1次
+			minIndex=i;
+			for(int j=i+1;j<arr.length;j++) {
+				if(arr[j]<arr[minIndex])
+					minIndex=j;
+			}
+			if(minIndex!=i)
+				swap(arr,i,minIndex);
+		}
+	}
+	
+	//插入排序
+	public static void insertSort(int[] arr) {
+		if(arr==null || arr.length==0)
+			return ;
+		for(int i=1;i<arr.length;i++) {	//假设第一个数位置是正确的
+			int j=i;
+			int target=arr[i];//待插入的
+			
+			//后移
+			while(j>0 && target<arr[j-1]) {
+				arr[j]=arr[j-1];
+				j--;
+			}
+			
+			//插入
+			arr[j]=target;
+
+		}
+	}
+	
+	//希尔排序
+	public static void ShellSort(int[] arr) {
+		int temp;
+		for(int k=arr.length/2;k>0;k/=2) {
+			for(int i=k;i<arr.length;i++) {
+				for(int j=i;j>=k;j-=k) {
+					if(arr[j-k]>arr[j]) {
+						temp=arr[j-k];
+						arr[j-k]=arr[j];
+						arr[j]=temp;
+					}
+				}
+			}
+		}
+	}
+	
+	//堆排序
+	public static void headSort(int[] arr) {
+		//构造初始堆，从第一个非叶子结点开始调整，左右子节点中较大的交换到父节点
+		for(int i=(arr.length)/2-1;i>=0;i--)
+			headAdjust(arr,arr.length,i);
+			
+		//排序，将最大的节点放在堆尾，然后从根结点重新调整
+		for(int i=arr.length-1;i>=1;i--) {
+			int temp=arr[0];
+			arr[0]=arr[i];
+			arr[i]=temp;
+			headAdjust(arr,i,0);
+		}
+	}
+	public static void headAdjust(int[] arr,int len,int i) {
+		int k=i,temp=arr[i],index=2*k+1;
+		while(index<len) {
+			//比较节点k的左右子树，选出较大的
+			if(index+1<len) {
+				if(arr[index]<arr[index+1])
+					index=index+1;
+			}
+			//比较根结点与选出的较大节点
+			if(arr[index]>temp) {
+				arr[k]=arr[index];
+				//如有元素替换，需检查替换后元素是否满足堆性质
+				k=index;
+				index=2*k+1;
+			}
+			else
+				break;
+		}
+		arr[k]=temp;
+	}
+	
+	//归并排序
+	public static void mergeSort(int[] arr,int left,int right) {
+		if(left>=right)
+			return;
+		//找出中间索引
+		int center=left+(right-left)/2;
+		//对左边数组进行递归
+		mergeSort(arr,left,center);
+		//对右边数组进行递归
+		mergeSort(arr,center+1,right);	
+		//合并
+		merge(arr,left,center,right);
+	}
+	//两个数组进行归并，归并后依然有序
+	public static void merge(int[] arr,int left,int center,int right) {
+		//临时数组
+		int[] tmpArr=new int[arr.length];
+		//右数组第一个元素索引
+		int first=left;
+		//右数组第一个元素索引
+		int second=center+1;
+		//third 记录临时数组索引
+		int third=left;
+		while(first<=center && second<=right) {
+			//从两个数组中取出最小的放入临时数组
+			if(arr[first]<=arr[second])
+				tmpArr[third++]=arr[first++];
+			else
+				tmpArr[third++]=arr[second++];
+		}
+		//剩余部分依次放入临时数组
+		while(second<=right)
+			tmpArr[third++]=arr[second++];
+		while(first<=center)
+			tmpArr[third++]=arr[first++];
+		while(left<=right)
+			arr[left]=tmpArr[left++];
+		return;
+	}
+	
+	//快速排序
+	public static void quickSort(int[] arr,int left,int right) {
+		if(left>=right)
+			return;
+		int pivotPos=partition(arr,left,right);
+		quickSort(arr,left,pivotPos-1);
+		quickSort(arr,pivotPos+1,right);
+		System.out.println(pivotPos);
+		for(int num:arr)
+			System.out.print(num+" ");
+		System.out.println();
+	}
+	//一次划分
+	public static int partition(int[] arr,int left,int right) {
+		int pivotKey=arr[left];
+		int pivotPointer=left;
+		
+		while(left<right) {
+			while(left<right && arr[right]>=pivotKey)
+				right--;
+			while(left<right && arr[left]<=pivotKey)
+				left++;
+			swap(arr,left,right);//把大的交换到右边，把小的交换到左边
+		}
+		swap(arr,pivotPointer,left);//最后把pivot交换到中间
+		return left;
+	}
+	
+	//基数排序
+	public static void radixsort(int[] arr,int d)//d表示最大的数有多少位
+	{
+		int k=0,n=1,m=1;	//控制键值排序依据在哪一位
+		int[][] temp=new int[10][arr.length];	//	数组的第一维表示可能的余数1到9
+		int[] order=new int[10];	//数组order[i]用来表示该位是i的数的个数
+		while(m<=d)
+		{
+			for(int i=0;i<arr.length;i++)
+			{
+				int lsd=((arr[i]/n)%10);
+				temp[lsd][order[lsd]]=arr[i];
+				order[lsd]++;				
+			}
+			for(int i=0;i<10;i++)
+			{
+				if(order[i]!=0)				
+					for(int j=0;j<order[i];j++)
+					{
+						arr[k]=temp[i][j];
+						k++;
+					}				
+				order[i]=0;
+			}
+			n*=10;
+			k=0;
+			m++;
+		}
+	}
+	
+	public static void main(String[] args) {
+		int[] a= {73, 22, 93, 43, 55, 14, 28, 65, 39, 81, 33, 100};
+		radixsort(a,3);
+		for(int num:a)
+			System.out.print(num+" ");
+	}
+}
