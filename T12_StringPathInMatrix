@@ -1,0 +1,120 @@
+package offer;
+
+public class T12_StringPathInMatrix {
+	//当矩阵坐标(row,col)的各自和路径字符串中下标为pathLength的字符一样
+	//从4个相邻格子定位pathLength+1的字符
+	//若不匹配则回到前一个字符重新定位
+	//一直重复直至str[pathLength]=='\0'
+	
+	public boolean hasPath(char[] matrix,int rows,int cols,char[] str)
+	{
+		if(matrix==null||rows<1||cols<1||str==null)
+			return false;
+		boolean[] visited=new boolean[rows*cols];
+		int pathLength=0;
+		for(int row=0;row<rows;++row)
+		{
+			for (int col=0;col<cols;++col)
+			{
+				if(hasPathCore(matrix,rows,cols,row,col,
+					str,pathLength,visited))
+					return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean hasPathCore(char[] matrix, int rows,int cols,int row,int col,
+			char[] str, int pathLength,boolean[] visited)
+	{
+		if(pathLength>=str.length)
+			return true;
+		boolean hasPath=false;
+		if(row>=0 && row<rows && col>=0 && col<cols 
+			&& matrix[row*cols+col]==str[pathLength] 
+			&& !visited[row*cols+col])
+		{
+			++pathLength;
+			visited[row*cols+col]=true;
+			hasPath=hasPathCore(matrix,rows,cols,row,col-1,
+					str,pathLength,visited)
+					||hasPathCore(matrix,rows,cols,row-1,col,
+					str,pathLength,visited)
+					|| hasPathCore(matrix,rows,cols,row,col+1,
+					str,pathLength,visited)
+					||hasPathCore(matrix,rows,cols,row+1,col,
+					str,pathLength,visited);
+					
+			if (!hasPath)
+			{
+				--pathLength;
+				visited[row*cols+col]=false;
+			}
+		}
+		return hasPath;
+	}
+	
+	//====================测试====================
+	public void Test(String testName,char[] matrix,int rows,int cols,char[] str,boolean expected)
+	{
+		if(testName!=null)
+			System.out.println(testName+" begins: ");
+		if(hasPath(matrix,rows,cols,str)==expected)
+			System.out.println("Passed.");
+		else
+			System.out.println("Failed.");			
+	}
+	
+	//========功能测试========
+	//ABTG
+	//CFCS
+	//JDEH
+	public void Test1()
+	{
+		char[] matrix= {'A','B','T','G','C','F','C','S','J','D','E','H'};
+		char[] str={'B','F','C','E'};
+		Test("Test1",matrix,3,4,str,true);
+	}	
+	public void Test2()
+	{
+		char[] matrix= {'A','B','T','G','C','F','C','S','J','D','E','H'};
+		char[] str= {'A','B','F','B'};
+		Test("Test2",matrix,3,4,str,false);
+	}
+	
+	//========边界测试========
+	//矩阵和路径所有字母相同
+	//AAAA
+	//AAAA
+	//AAAA
+	public void Test3()
+	{
+		char[] matrix= {'A','A','A','A','A','A','A','A','A','A','A','A'};
+		char[] str= {'A','A','A','A','A','A','A','A','A','A','A','A'};
+		Test("Test3",matrix,3,4,str,true);
+	}
+	//矩阵仅一行一列
+	public void Test4()
+	{
+		char[] matrix= {'A'};
+		char[] str= {'A'};
+		Test("Test4",matrix,1,1,str,true);
+	}
+	
+	//========特殊输入测试
+	//null
+	public void Test5()
+	{
+		Test("Test5",null,0,0,null,false);
+	}
+	
+	public static void main(String[] args)
+	{
+		T12_StringPathInMatrix main= new T12_StringPathInMatrix();
+		main.Test1();
+		main.Test2();
+		main.Test3();
+		main.Test4();
+		main.Test5();
+	}
+}
