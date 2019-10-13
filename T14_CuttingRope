@@ -1,0 +1,77 @@
+package offer;
+
+public class T14_CuttingRope {
+	/*动态规划
+	 * 1、从上而下递归公式 f(n)=max[f(i)*f(n-i)]
+	 * 2、从下而上顺序计算f(2),f(3),f(4),f(5),...,f(n)，int[] products存储子问题最优解
+	 * 3、由于必须剪f(2)=1,f(3)=2；但products[0]=0 products[1]=1 products[2]=2 products[3]=3
+	 */
+	public int maxProductAfterCutting1(int length)
+	{
+		if(length<2)
+			return 0;
+		if(length==2)
+			return 1;
+		if(length==3)
+			return 2;
+		int[] products=new int[length+1];
+		products[0]=0;
+		products[1]=1;
+		products[2]=2;
+		products[3]=3;
+		int max=0;
+		for (int i=4;i<=length;++i)
+		{
+			max=0;
+			for (int j=1;j<=i/2;++j)
+			{
+				int product=products[j]*products[i-j];
+				if(max<product)
+					max=product;
+			}
+			products[i]=max;
+		}
+		max=products[length];
+		return max;
+	}
+	
+	/*贪婪算法
+	 * 1、当n>=5，尽可能多的剪长度为3 的数字
+	 * 2、当剩下绳子长度为4，把数绳子剪成两段长度为2的绳子
+	 */
+	public int maxProductAfterCutting2(int length)
+	{
+		if(length<2)
+			return 0;
+		if(length==2)
+			return 1;
+		if(length==3)
+			return 2;
+		
+		//尽可能多的减去长度为3的绳子段
+		int timesOf3=length/3;
+				
+		//当绳子剩下长度为4时，不能再减去长度为3的绳子段
+		//此事更好的办法是将绳子剪成长度为2的两段，2*2>1*3
+		if(length-timesOf3*3==1)
+			timesOf3-=1;
+		int timesOf2=(length-timesOf3*3)/2;
+		
+		return (int)(Math.pow(3,timesOf3)*Math.pow(2,timesOf2));		
+	}
+	
+	
+	
+	public static void main(String[] args)
+	{
+		T14_CuttingRope main =new T14_CuttingRope();
+		//功能测试
+		System.out.println(main.maxProductAfterCutting2(8));
+		//边界值测试
+		System.out.println(main.maxProductAfterCutting2(0));
+		System.out.println(main.maxProductAfterCutting2(1));
+		System.out.println(main.maxProductAfterCutting2(2));
+		System.out.println(main.maxProductAfterCutting2(3));
+		System.out.println(main.maxProductAfterCutting2(4));		
+	}
+}
