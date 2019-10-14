@@ -1,0 +1,46 @@
+package offer;
+
+public class T15_NumberOf1InBinary {
+	/* 常规解法
+	 * ① n和1做与运算，判断n的最低位是不是1
+	 * ② 1左移一位，和n做与运算，判断n的次低位是不是1
+	 *   时间复杂度：整数二进制的位数
+	 */
+	public int NumberOf1_1(int n)
+	{
+		int count = 0;
+		int flag=1;
+		while(flag!=0)
+		{
+			if((n&flag)!=0)
+				count++;
+			flag=flag<<1;					
+		}
+		return count;
+	}
+	
+	/*
+	 * 把一个整数减去1再和原来的整数做与运算，相当于把整数最右边的1变为0
+	 */
+	public int NumberOf1_2(int n)
+	{
+		int count=0;
+		while(n!=0)
+		{
+			++count;
+			n=(n-1)&n;
+		}
+		return count;
+	}
+	
+	public static void main(String[] args)
+	{
+		T15_NumberOf1InBinary main= new T15_NumberOf1InBinary();
+		//正数
+		System.out.println(main.NumberOf1_2(0x7FFFFFFF)); 
+		System.out.println(main.NumberOf1_2(1)); 
+		//负数
+		System.out.println(main.NumberOf1_2(0x80000000)); 
+		System.out.println(main.NumberOf1_2(0xFFFFFFFF)); 
+	}
+}
