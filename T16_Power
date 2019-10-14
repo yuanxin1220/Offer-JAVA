@@ -1,0 +1,80 @@
+package offer;
+public class T16_Power {
+	//全局变量，检查程序是否出错
+	boolean g_InvalidInput=false;
+	
+	public double Power(double base,int exponent)
+	{
+		g_InvalidInput=false;
+		//对0求倒数->利用全局变量报错
+		if(equal(base,0.0)&&exponent<0)
+		{
+			g_InvalidInput=true;
+			return 0.0;
+		}
+		int absExponent=Math.abs(exponent);
+		double result=PowerWithUnsignedExponent(base,absExponent);
+		//指数为负数的情况
+		if(exponent<0)
+			result=1.0/result;
+		return result;
+	}
+	//斐波那契log(n)的时间效率
+	public double PowerWithUnsignedExponent(double base, int exponent)
+	{
+		if(exponent==0)
+			return 1;
+		if(exponent==1)
+			return base;
+		//右移运算代替求余运算
+		double result = PowerWithUnsignedExponent(base,exponent>>1);
+		result*=result;
+		if((exponent&0x1)==1)
+			result*=base;
+		return result;
+	}
+	
+	public boolean equal(double num1,double num2)
+	{
+		if(Math.abs(num1-num2)<0.0000001)
+			return true;
+		else
+			return false;
+	}
+	
+	//测试代码
+	public void Test(String testName,double base,int exponent,double expectedResult,boolean expectedFlag)
+	{
+		double result=Power(base,exponent);
+		if(equal(result,expectedResult) && g_InvalidInput==expectedFlag)
+			System.out.println(testName+" passed");
+		else
+			System.out.println(testName+" Failed");
+	}
+	
+	public static void main(String[] args)
+	{
+		T16_Power main =new T16_Power();
+		
+		//底数指数均为正数
+		main.Test("Test1: ",2,3,8,false);
+		
+		//底数为负数，指数为正数
+		main.Test("Test3: ",-2,3,-8,false);
+		
+		//指数为负数
+		main.Test("Test3: ",2,-3,0.125,false);	
+		
+		//指数为0
+		main.Test("Test4: ", 2, 0, 1, false);
+		
+		//底数、指数都为0
+		main.Test("Test5: ", 0, 0, 1, false);
+		
+		//底数为0、指数正数
+		main.Test("Test6: ", 0, 4, 0, false);
+		
+		//底数0、指数负数
+		main.Test("Test7: ", 0, -4, 0, true);
+	}
+}
