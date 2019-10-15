@@ -1,0 +1,115 @@
+package offer;
+
+public class T17_Print1ToMaxOfNDigits {
+	//======= 方法一：在字符串上模拟数字加法 ========
+	public void Print1ToMaxOfNDigits_1(int n)
+	{
+		if(n<=0)
+			return;
+		
+		 char[] number=new char[n];	//字符串初始化
+		 for(int i=0;i<n;i++)
+			 number[i]='0';
+		 while(!Increment(number))	//数字的字符串上增加1
+			 PrintNumber(number);	//字符串打印
+		 
+	}
+	//字符串number表示一个数字，在number上增加1
+	//如果做加法溢出，则返回true；否则返回false
+	public boolean Increment(char[] number)
+	{
+		boolean isOverflow=false;	//溢出
+		int nTakeOver=0;	//进位
+		int nLength=number.length;
+		
+		for(int i=nLength-1;i>=0;i--)
+		{
+			int nSum=number[i]-'0'+nTakeOver;
+			if(i==nLength-1)
+				nSum++;	//最后一位加1
+			
+			if(nSum>=10)
+			{
+				if(i==0)
+					isOverflow=true;	//溢出
+				else
+				{
+					nSum-=10;
+					nTakeOver=1;	//进位
+					number[i]=(char)(nSum+'0');
+				}
+			}
+			else
+			{
+				number[i]=(char)(nSum+'0');
+				break;
+			}
+		}
+		return isOverflow;
+	}
+	
+	//n位所有十进制数-->n个从0到9的全排列
+	public void Print1ToMaxOfNDigits_2(int n)
+	{
+		if(n<=0)
+			return;
+		
+		char[] number=new char[n];	//字符数组的创建
+		for(int i=0;i<10;i++)
+		{
+			number[0]=(char)(i+'0');	//更新number的最高位
+			Print1ToMaxOfNDigitsRecursively(number,n,0);
+		}
+			
+	}
+	public void Print1ToMaxOfNDigitsRecursively(char[] number, int length,int index)
+	{
+		if(index==length-1)	//递归结束条件：已经递归了number的最后一位
+		{
+			PrintNumber(number);
+			return;
+		}
+		for(int i=0;i<10;++i)
+		{
+			number[index+1]=(char)(i+'0');	//更新number的当前位
+			Print1ToMaxOfNDigitsRecursively(number,length,index+1);	//递归更新number的当前位的后一位
+			
+		}
+	}
+	
+	//======== 公共函数 ========
+	/*字符串number表示一个数字，数字有若干个0开头
+	 *打印出这个数字，并忽略开头的0 
+	 */
+	public void PrintNumber(char[] number)
+	{
+		boolean isBeginning0=true;
+		int nLength=number.length;
+		for(int i=0;i<nLength;++i)
+		{
+			if(isBeginning0 && number[i]!='0')	//从第一个非0字符开始打印
+				isBeginning0=false;
+			if(!isBeginning0)
+				System.out.print(number[i]);
+		}
+		System.out.println();
+	}
+	
+	//==================== 测试代码 ====================
+	public void Test(int n)
+	{
+		System.out.println("Test for "+String.valueOf(n)+" begins: ");
+		Print1ToMaxOfNDigits_1(n);
+		Print1ToMaxOfNDigits_2(n);
+		System.out.println("Test for "+String.valueOf(n)+" ends.");
+	}
+	public static void main(String[] args)
+	{
+		T17_Print1ToMaxOfNDigits main=new T17_Print1ToMaxOfNDigits();
+		main.Test(1);
+		main.Test(2);
+		main.Test(3);
+		main.Test(0);
+		main.Test(-1);
+	}
+}
