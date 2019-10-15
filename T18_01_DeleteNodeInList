@@ -1,0 +1,148 @@
+package offer;
+class ListNode
+{
+	public int m_nValue;
+	public ListNode m_pNext;
+	public ListNode(int n)
+	{
+		this.m_nValue=n;
+		m_pNext=null;
+	}
+}
+public class T18_01_DeleteNodeInList {
+	public ListNode DeleteNode(ListNode pListHead,ListNode pToBeDeleted)
+	{
+		if(pListHead==null || pToBeDeleted==null)
+			return null;
+		
+		//要删除的结点不是尾结点
+		if(pToBeDeleted.m_pNext!=null)
+		{
+			ListNode pNext=pToBeDeleted.m_pNext;
+			pToBeDeleted.m_nValue=pNext.m_nValue;
+			pToBeDeleted.m_pNext=pNext.m_pNext;
+			pNext=null;
+		}		
+		//链表只有一个结点，删除头结点（也是尾结点）
+		else if(pListHead==pToBeDeleted)
+		{
+			pToBeDeleted=null;
+			pListHead=null;
+		}
+		//链表中有多个结点，删除尾结点
+		else
+		{
+			ListNode pNode=pListHead;
+			while(pNode.m_pNext!=pToBeDeleted)
+				pNode=pNode.m_pNext;
+			pNode.m_pNext=null;
+			pToBeDeleted=null;
+		}
+		return pListHead;
+	}
+	
+	public void PrintList(ListNode pNode)
+	{
+		while(pNode!=null)
+		{
+			System.out.print(pNode.m_nValue+" ");
+			pNode=pNode.m_pNext;
+		}
+		System.out.println();
+	}
+	
+	// ==================== 测试代码 ====================
+	public void Test(ListNode pListHead,ListNode pNode)
+	{
+		System.out.println("The orginal list is: ");
+		PrintList(pListHead);
+
+		System.out.println("The node to be deleted is: ");
+		if(pNode==null)
+			System.out.println(pNode);
+		else
+			System.out.println(pNode.m_nValue);
+		
+		pListHead=DeleteNode(pListHead,pNode);
+
+		System.out.println("The result list is: ");
+		PrintList(pListHead);
+	}
+	
+	//链表中多个结点，删除中间结点
+	public void Test1()
+	{
+		ListNode pNode1=new ListNode(1);
+		ListNode pNode2=new ListNode(2);
+		ListNode pNode3=new ListNode(3);
+		ListNode pNode4=new ListNode(4);
+		ListNode pNode5=new ListNode(5);
+
+		pNode1.m_pNext=pNode2;
+		pNode2.m_pNext=pNode3;
+		pNode3.m_pNext=pNode4;
+		pNode4.m_pNext=pNode5;
+
+		Test(pNode1,pNode3);
+	}
+	
+	//链表中多个结点，删除尾结点
+	public void Test2()
+	{
+		ListNode pNode1=new ListNode(1);
+		ListNode pNode2=new ListNode(2);
+		ListNode pNode3=new ListNode(3);
+		ListNode pNode4=new ListNode(4);
+		ListNode pNode5=new ListNode(5);
+
+		pNode1.m_pNext=pNode2;
+		pNode2.m_pNext=pNode3;
+		pNode3.m_pNext=pNode4;
+		pNode4.m_pNext=pNode5;
+
+		Test(pNode1,pNode5);
+	}
+	
+	//链表中多个结点，删除头结点
+	public void Test3()
+	{
+		ListNode pNode1=new ListNode(1);
+		ListNode pNode2=new ListNode(2);
+		ListNode pNode3=new ListNode(3);
+		ListNode pNode4=new ListNode(4);
+		ListNode pNode5=new ListNode(5);
+
+		pNode1.m_pNext=pNode2;
+		pNode2.m_pNext=pNode3;
+		pNode3.m_pNext=pNode4;
+		pNode4.m_pNext=pNode5;
+
+		Test(pNode1,pNode1);
+	}
+	//链表中只有一个结点，删除头结点
+	public void Test4()
+	{
+		ListNode pNode1=new ListNode(1);
+		Test(pNode1,pNode1);
+	}
+	
+	//链表为空
+	public void Test5()
+	{
+		Test(null,null);
+	}
+	
+	public static void pp(ListNode p)
+	{
+		p=p.m_pNext;
+	}
+	public static void main(String[] args)
+	{
+		T18_01_DeleteNodeInList main=new T18_01_DeleteNodeInList();
+		//main.Test1();
+		//main.Test2();
+		//main.Test3();
+		main.Test4();
+		//main.Test5();
+	}
+}
