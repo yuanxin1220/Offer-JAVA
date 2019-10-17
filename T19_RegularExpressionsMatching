@@ -1,0 +1,125 @@
+package offer;
+
+public class T19_RegularExpressionsMatching {
+	/*pattern下一个字符为'*'
+	 * pattern当前字符和str当前字符匹配的三种情况：
+	 * (1)pattern当前字符匹配str中的0个字符：match(str,pattern+2)
+	 * (2)pattern当前字符匹配str中的1个字符：match(str+1,pattern+2)
+	 * (3)pattern当前字符匹配str中的多个字符：match(str+1,pattern)
+	 * 
+	 * pattern下一个字符不是'*'
+	 * 逐字符匹配match(str+1,pattern+1)
+	 */
+	public boolean match(char[] str,char[] pattern)
+	{
+		if(str==null || pattern==null)
+			return false;
+		return matchCore(str,0,pattern,0);
+	}
+	
+	public boolean matchCore(char[] str, int indexOfStr, char[] pattern, int indexOfPattern)
+	{
+        if(indexOfStr==str.length && indexOfPattern==pattern.length)
+        	return true;	//都匹配完了
+        if(indexOfStr<str.length && indexOfPattern==pattern.length)
+        	return false;	//模式完了，字符串还有
+        //模式没结束，匹配字符串可结束可不结束
+        if(indexOfPattern+1<pattern.length && pattern[indexOfPattern+1]=='*')	//当pattern的下一个是*号
+        {
+        	if((indexOfStr<str.length && pattern[indexOfPattern]=='.')
+        			||(indexOfStr<str.length && pattern[indexOfPattern]==str[indexOfStr]))
+        		// 当前位置匹配完成        	
+        		return matchCore(str,indexOfStr,pattern,indexOfPattern+2)
+        				|| matchCore(str,indexOfStr+1,pattern,indexOfPattern+2)
+        				|| matchCore(str,indexOfStr+1,pattern,indexOfPattern);
+        	else
+        		return matchCore(str,indexOfStr,pattern,indexOfPattern+2);        	
+        }
+        //当pattern的下一个不是*号
+        if(indexOfStr<str.length && (pattern[indexOfPattern]==str[indexOfStr] || pattern[indexOfPattern]=='.'))
+        	return matchCore(str,indexOfStr+1,pattern,indexOfPattern+1);
+        return false;
+	}
+	
+	public void Test(String testName, char[] str,char[] pattern,boolean expected)
+	{
+		if(testName!=null)
+			System.out.print(testName+" begins: ");
+		
+		if(match(str,pattern)==expected)
+			System.out.println("Passed.");
+		else
+			System.out.println("Failed.");			
+	}
+	
+	public static void main(String[] args)
+	{
+		T19_RegularExpressionsMatching main=new T19_RegularExpressionsMatching();
+		
+		//空字符串
+		char[] str1= {},pattern1= {};
+		main.Test("Test1", str1, pattern1, true);
+		char[] str2= {},pattern2= {'.','*'};
+		main.Test("Test2",str2 ,pattern2, true);
+		char[] str3= {},pattern3= {'.'};
+		main.Test("Test3",str3 ,pattern3, false);
+		char[] str4= {},pattern4= {'c','*'};
+		main.Test("Test4",str4 ,pattern4, true);
+		char[] str5= {'a'},pattern5= {'.','*'};
+		main.Test("Test5",str5 ,pattern5, true);
+		char[] str6= {'a'},pattern6= {'a','.'};
+		main.Test("Test6",str6 ,pattern6, false);
+		char[] str7= {'a'},pattern7= {};
+		main.Test("Test7",str7 ,pattern7, false);
+		char[] str8= {'a'},pattern8= {'.'};
+		main.Test("Test8",str8 ,pattern8, true);
+		char[] str9= {'a'},pattern9= {'a','b','*'};
+		main.Test("Test9",str9 ,pattern9, true);
+		char[] str10= {'a'},pattern10= {'a','b','*','a'};
+		main.Test("Test10",str10 ,pattern10, false);
+
+		char[] str11= {'a','a'},pattern11= {'a','a'};
+		main.Test("Test11", str11, pattern11, true);
+		char[] str12= {'a','a'},pattern12= {'a','*'};
+		main.Test("Test12",str12 ,pattern12, true);
+		char[] str13= {'a','a'},pattern13= {'.','*'};
+		main.Test("Test13",str13 ,pattern13, true);
+		char[] str14= {'a','a'},pattern14= {'.'};
+		main.Test("Test14",str14 ,pattern14, false);
+		char[] str15= {'a','b'},pattern15= {'.','*'};
+		main.Test("Test15",str15 ,pattern15, true);
+		//char[] str16= {'a','b'},pattern16= {'.','*'};
+		//main.Test("Test16",str16 ,pattern16, true);
+		char[] str17= {'a','a','a'},pattern17= {'a','a','*'};
+		main.Test("Test17",str17 ,pattern17, true);
+		char[] str18= {'a','a','a'},pattern18= {'a','a','.','a'};
+		main.Test("Test18",str18 ,pattern18, false);
+		char[] str19= {'a','a','a'},pattern19= {'a','.','a'};
+		main.Test("Test19",str19 ,pattern19, true);
+		char[] str20= {'a','a','a'},pattern20= {'.','a'};
+		main.Test("Test20",str20 ,pattern20, false);
+		
+		//空字符串
+		char[] str21= {'a','a','a'},pattern21= {'a','*','a'};
+		main.Test("Test21", str21, pattern21, true);
+		char[] str22= {'a','a','a'},pattern22= {'a','b','*','a'};
+		main.Test("Test22",str22 ,pattern22, false);
+		char[] str23= {'a','a','a'},pattern23= {'a','b','*','a','c','*','a'};
+		main.Test("Test23",str23 ,pattern23, true);
+		char[] str24= {'a','a','a'},pattern24= {'a','b','*','a','*','c','*','a'};
+		main.Test("Test24",str24 ,pattern24, true);
+		char[] str25= {'a','a','a'},pattern25= {'.','*'};
+		main.Test("Test25",str25 ,pattern25, true);
+		char[] str26= {'a','a','b'},pattern26= {'c','*','a','*','b'};
+		main.Test("Test26",str26 ,pattern26, true);
+		char[] str27= {'a','a','c','a'},pattern27= {'a','b','*','a','*','c','*','a'};
+		main.Test("Test27",str27 ,pattern27, true);
+		char[] str28= {'a','a','b','a'},pattern28= {'a','b','*','a','*','c','*','a'};
+		main.Test("Test28",str28 ,pattern28, false);
+		char[] str29= {'b','b','b','b','a'},pattern29= {'.','*','a','*','a'};
+		main.Test("Test29",str29 ,pattern29, true);
+		char[] str30= {'b','c','b','b','a','b','a','b'},pattern30= {'.','*','a','*','a'};
+		main.Test("Test30",str30 ,pattern30, false);
+		
+	}
+}
