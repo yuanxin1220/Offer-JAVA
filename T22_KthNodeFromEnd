@@ -1,0 +1,151 @@
+package offer;
+
+public class T22_KthNodeFromEnd {
+	public ListNode FindKthToTail(ListNode pListHead,int k)
+	{
+		if(pListHead==null || k==0)
+			return null;
+		
+		ListNode pAhead =pListHead;
+		ListNode pBehind = null;
+		
+		for(int i=0;i<k-1;++i)
+		{
+			if(pAhead.m_pNext!=null)
+				pAhead=pAhead.m_pNext;
+			else
+				return null;
+		}
+		
+		pBehind=pListHead;
+		while(pAhead.m_pNext!=null)
+		{
+			pAhead=pAhead.m_pNext;
+			pBehind=pBehind.m_pNext;
+		}
+		return pBehind;
+	}
+	
+	// ==================== 测试代码 ====================
+	// 测试要找的结点在链表中间
+	public void Test1()
+	{
+		System.out.println("===== Test1 starts: =====");
+		ListNode pNode1=new ListNode(1);
+		ListNode pNode2=new ListNode(2);
+		ListNode pNode3=new ListNode(3);
+		ListNode pNode4=new ListNode(4);
+		ListNode pNode5=new ListNode(5);
+
+		pNode1.m_pNext=pNode2;
+		pNode2.m_pNext=pNode3;
+		pNode3.m_pNext=pNode4;
+		pNode4.m_pNext=pNode5;
+
+		System.out.println("expected result: 4.");
+		ListNode pNode=FindKthToTail(pNode1,2);
+		System.out.println(pNode.m_nValue);
+	}
+
+	// 测试要找的结点是链表尾结点
+	public void Test2()
+	{
+		System.out.println("===== Test2 starts: =====");
+		ListNode pNode1=new ListNode(1);
+		ListNode pNode2=new ListNode(2);
+		ListNode pNode3=new ListNode(3);
+		ListNode pNode4=new ListNode(4);
+		ListNode pNode5=new ListNode(5);
+
+		pNode1.m_pNext=pNode2;
+		pNode2.m_pNext=pNode3;
+		pNode3.m_pNext=pNode4;
+		pNode4.m_pNext=pNode5;
+
+		System.out.println("expected result: 5.");
+		ListNode pNode=FindKthToTail(pNode1,1);
+		System.out.println(pNode.m_nValue);
+	}
+
+	// 测试要找的结点是链表头结点
+	public void Test3()
+	{
+		System.out.println("===== Test3 starts: =====");
+		ListNode pNode1=new ListNode(1);
+		ListNode pNode2=new ListNode(2);
+		ListNode pNode3=new ListNode(3);
+		ListNode pNode4=new ListNode(4);
+		ListNode pNode5=new ListNode(5);
+
+		pNode1.m_pNext=pNode2;
+		pNode2.m_pNext=pNode3;
+		pNode3.m_pNext=pNode4;
+		pNode4.m_pNext=pNode5;
+
+		System.out.println("expected result: 1.");
+		ListNode pNode=FindKthToTail(pNode1,5);
+		System.out.println(pNode.m_nValue);
+	}
+
+	// 测试空链表
+	public void Test4()
+	{
+		System.out.println("===== Test4 starts: =====");
+
+		System.out.println("expected result: null.");
+		ListNode pNode=FindKthToTail(null,100);
+		System.out.println(pNode);
+	}
+	
+	// 测试输入的第二个参数大于链表的结点总数
+	public void Test5()
+	{
+		System.out.println("===== Test5 starts: =====");
+		ListNode pNode1=new ListNode(1);
+		ListNode pNode2=new ListNode(2);
+		ListNode pNode3=new ListNode(3);
+		ListNode pNode4=new ListNode(4);
+		ListNode pNode5=new ListNode(5);
+
+		pNode1.m_pNext=pNode2;
+		pNode2.m_pNext=pNode3;
+		pNode3.m_pNext=pNode4;
+		pNode4.m_pNext=pNode5;
+
+		System.out.println("expected result: null.");
+		ListNode pNode=FindKthToTail(pNode1,6);
+		System.out.println(pNode);
+	}
+	
+	// 测试输入的第二个参数大于链表的结点总数
+	public void Test6()
+	{
+		System.out.println("===== Test6 starts: =====");
+		ListNode pNode1=new ListNode(1);
+		ListNode pNode2=new ListNode(2);
+		ListNode pNode3=new ListNode(3);
+		ListNode pNode4=new ListNode(4);
+		ListNode pNode5=new ListNode(5);
+
+		pNode1.m_pNext=pNode2;
+		pNode2.m_pNext=pNode3;
+		pNode3.m_pNext=pNode4;
+		pNode4.m_pNext=pNode5;
+
+		System.out.println("expected result: null.");
+		ListNode pNode=FindKthToTail(pNode1,0);
+		System.out.println(pNode);
+	}
+	
+	
+	public static void main(String[] args)
+	{
+		T22_KthNodeFromEnd main=new T22_KthNodeFromEnd();
+		//main.Test1();
+		//main.Test2();
+		//main.Test3();
+		//main.Test4();
+		//main.Test5();
+		main.Test6();
+	}
+}
