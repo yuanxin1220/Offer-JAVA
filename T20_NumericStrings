@@ -1,0 +1,97 @@
+package offer;
+
+public class T20_NumericStrings {
+	// 数字的格式可以用 A[.[B]][e|EC] 或者 .B[e|EC]表示，其中A和C都是
+	//整数（可以有正负号，也可以没有），而B是一个无符号数
+	public boolean isNumber(char[] str)
+	{
+		if(str==null||str.length==0)
+			return false;
+		int[] index=new int[1];//用于记录当前字符的位置
+		index[0]=0;
+		//先判断A
+		boolean isNumber=scanInteger(str,index);
+		//判断B
+		/* 1. 小数可以没有整数部分，例如.123(0.123)
+		 * 2. 小数点后面可以没有数字，例如233(233.0)
+		 * 3. 小数点前面后面可以有数字，例如233.666
+		 */
+		if(index[0]<str.length&& (str[index[0]]=='.'))
+		{
+			index[0]++;
+			isNumber=scanUnsignedInteger(str,index)||isNumber;//.B和A.和A.B形式均可以
+		}
+		//判断e后面的C
+		/* 1. 当e或E后面没有数字，整个字符串不能表示数字，例如.e1、e1
+		 * 2. 当e或E前面没有整数，整个字符串不能表示数字，例如12e、12e+5.4
+		 */
+		if(index[0]<str.length && (str[index[0]]=='e' || str[index[0]]=='E'))
+		{
+			index[0]++;
+			isNumber=scanInteger(str,index)&&isNumber;
+		}
+		if(isNumber && index[0]==str.length)
+			return true;
+		else
+			return false;
+	}
+	
+	public boolean scanInteger(char[] str,int[] index)
+	{
+		if(index[0]<str.length && (str[index[0]]=='+' ||str[index[0]]=='-'))
+			index[0]++;
+		return scanUnsignedInteger(str,index);
+	}
+	
+	public boolean scanUnsignedInteger(char[] str,int[] index)
+	{
+		int start=index[0];	
+		while(index[0]<str.length && (str[index[0]]-'0'<=9 && str[index[0]]-'0'>=0))		
+			index[0]++;		
+		if(index[0]>start)
+			return true;
+		else 
+			return false;
+	}
+	
+	// ==================== 测试代码 ====================
+	public void Test(String testName, char[] str,boolean expected)
+	{
+		if(testName!=null)
+			System.out.print(testName+" begins: ");
+		
+		if(isNumber(str)==expected)
+			System.out.println("Passed.");
+		else
+			System.out.println("Failed.");			
+	}
+	
+	public static void main(String[] args)
+	{
+		T20_NumericStrings main=new T20_NumericStrings();
+		
+		main.Test("Test1", "100".toCharArray(), true);
+		main.Test("Test2", "123.45e+6".toCharArray(), true);
+		main.Test("Test3", "+500".toCharArray(), true);
+		main.Test("Test4", "5e2".toCharArray(), true);
+		main.Test("Test5", "3.1416".toCharArray(), true);
+		main.Test("Test6", "600.".toCharArray(), true);
+		main.Test("Test7", "-.123".toCharArray(), true);
+		main.Test("Test8", "-1E-16".toCharArray(), true);
+		main.Test("Test9", "1.79769313486232E+308".toCharArray(), true);
+		System.out.println();	
+
+		main.Test("Test10", "12e".toCharArray(), false);
+		main.Test("Test11", "1a3.14".toCharArray(), false);
+		main.Test("Test12", "1+23".toCharArray(), false);
+		main.Test("Test13", "1.2.3".toCharArray(), false);
+		main.Test("Test14", "+-5".toCharArray(), false);
+		main.Test("Test15", "12e+5.4".toCharArray(), false);
+		main.Test("Test16", ".".toCharArray(), false);
+		main.Test("Test17", ".e1".toCharArray(), false);
+		main.Test("Test18", "e1".toCharArray(), false);
+		main.Test("Test19", "+.".toCharArray(), false);
+		main.Test("Test20", "".toCharArray(), false);
+		main.Test("Test21", null, false);
+	}
+}
