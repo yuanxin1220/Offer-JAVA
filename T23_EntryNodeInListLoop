@@ -1,0 +1,77 @@
+package offer;
+
+public class T23_EntryNodeInListLoop {
+	//判断链表是否存在环，若存在返回下一节点
+	public ListNode MeetingNode(ListNode pHead)
+	{
+		if(pHead==null)
+			return null;
+		
+		ListNode pSlow=pHead.m_pNext;
+		if(pSlow==null)
+			return null;
+		
+		ListNode pFast=pSlow.m_pNext;
+		while(pFast!=null && pSlow!=null)
+		{
+			if(pFast==pSlow)
+				return pFast;
+			pSlow=pSlow.m_pNext;
+			pFast=pFast.m_pNext;
+			if(pFast.m_pNext!=null)
+				pFast=pFast.m_pNext;			
+		}
+		return null;
+	}
+	
+	public ListNode EntryNodeOfLoop(ListNode pHead)
+	{
+		ListNode meetingNode=MeetingNode(pHead);
+		if(meetingNode==null)
+			return null;
+		
+		//得到环中结点数
+		int nodesInLoop=1;
+		ListNode pNode1=meetingNode;
+		while(pNode1.m_pNext!=meetingNode)
+		{
+			pNode1=pNode1.m_pNext;
+			++nodesInLoop;
+		}
+		
+		//先移动pNode1，次数为环中结点的数目
+		pNode1=pHead;
+		for(int i=0;i<nodesInLoop;i++)
+			pNode1=pNode1.m_pNext;
+		
+		//再移动pNode1和pNode2，相遇节点即入口节点
+		ListNode pNode2=pHead;
+		while(pNode1!=pNode2)
+		{
+			pNode1=pNode1.m_pNext;
+			pNode2=pNode2.m_pNext;
+		}
+		return pNode1;
+	}
+	
+	public static void main(String[] args)
+	{
+		ListNode pNode1=new ListNode(1);
+		ListNode pNode2=new ListNode(2);
+		ListNode pNode3=new ListNode(3);
+		ListNode pNode4=new ListNode(4);
+		ListNode pNode5=new ListNode(5);
+		ListNode pNode6=new ListNode(6);
+
+		pNode1.m_pNext=pNode2;
+		pNode2.m_pNext=pNode3;
+		pNode3.m_pNext=pNode4;
+		pNode4.m_pNext=pNode5;
+		pNode5.m_pNext=pNode6;
+		pNode6.m_pNext=pNode3;
+
+		T23_EntryNodeInListLoop main=new T23_EntryNodeInListLoop();
+		ListNode result=main.EntryNodeOfLoop(pNode1);
+		System.out.println(result.m_nValue);
+	}
+}
