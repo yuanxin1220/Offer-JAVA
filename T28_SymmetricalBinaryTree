@@ -1,0 +1,141 @@
+package offer;
+
+public class T28_SymmetricalBinaryTree {
+	public boolean isSymmetrical(BinaryTreeNode pRoot)
+	{
+		return isSymmetrical(pRoot,pRoot);
+	}
+	
+	public boolean isSymmetrical(BinaryTreeNode pRoot1,BinaryTreeNode pRoot2)
+	{
+		if(pRoot1==null && pRoot2==null)
+			return true;
+		if(pRoot1==null || pRoot2==null)
+			return false;
+		if(pRoot1.m_dValue!=pRoot2.m_dValue)
+			return false;
+		return isSymmetrical(pRoot1.m_pLeft,pRoot2.m_pRight)
+				&& isSymmetrical(pRoot1.m_pRight,pRoot2.m_pLeft);
+	}
+
+	// ==================== 测试代码 ====================
+	//辅助测试代码
+	public void ConnectTreeNodes(BinaryTreeNode pParent,BinaryTreeNode pLeft,BinaryTreeNode pRight)
+	{
+		if(pParent!=null)
+		{
+			pParent.m_pLeft=pLeft;
+			pParent.m_pRight=pRight;
+		}
+	}
+	
+	public void Test(String testName,BinaryTreeNode pRoot,boolean expected)
+	{
+		if(testName!=null)
+			System.out.print(testName);
+		
+		if(isSymmetrical(pRoot)==expected)
+			System.out.println(" passed.");
+		else
+			System.out.print(" failed");
+	}
+	
+	// 对称的二叉树
+	//   8
+	// 6   6
+	//5 7 7 5
+	public void Test1()
+	{
+		BinaryTreeNode pNode8=new BinaryTreeNode(8);
+		BinaryTreeNode pNode61=new BinaryTreeNode(6);
+		BinaryTreeNode pNode62=new BinaryTreeNode(6);
+		BinaryTreeNode pNode51=new BinaryTreeNode(5);
+		BinaryTreeNode pNode71=new BinaryTreeNode(7);
+		BinaryTreeNode pNode72=new BinaryTreeNode(7);
+		BinaryTreeNode pNode52=new BinaryTreeNode(5);
+		ConnectTreeNodes(pNode8,pNode61,pNode62);
+		ConnectTreeNodes(pNode61,pNode51,pNode71);
+		ConnectTreeNodes(pNode62,pNode72,pNode52);
+		Test("Test1",pNode8,true);
+	}
+	
+	//因结构而不对称的二叉树
+	//   7
+	// 7   7
+	//7 7 7 
+	public void Test2()
+	{
+		BinaryTreeNode pNode1=new BinaryTreeNode(7);
+		BinaryTreeNode pNode2=new BinaryTreeNode(7);
+		BinaryTreeNode pNode3=new BinaryTreeNode(7);
+		BinaryTreeNode pNode4=new BinaryTreeNode(7);
+		BinaryTreeNode pNode5=new BinaryTreeNode(7);
+		BinaryTreeNode pNode6=new BinaryTreeNode(7);
+		ConnectTreeNodes(pNode1,pNode2,pNode3);
+		ConnectTreeNodes(pNode2,pNode4,pNode5);
+		ConnectTreeNodes(pNode3,pNode6,null);
+		Test("Test2",pNode1,false);
+	}
+	
+	// 结构对称但结点的值不对称的二叉树
+	//   8
+	// 6   9
+	//5 7 7 5
+	public void Test3()
+	{
+		BinaryTreeNode pNode8=new BinaryTreeNode(8);
+		BinaryTreeNode pNode61=new BinaryTreeNode(6);
+		BinaryTreeNode pNode91=new BinaryTreeNode(9);
+		BinaryTreeNode pNode51=new BinaryTreeNode(5);
+		BinaryTreeNode pNode71=new BinaryTreeNode(7);
+		BinaryTreeNode pNode72=new BinaryTreeNode(7);
+		BinaryTreeNode pNode52=new BinaryTreeNode(5);
+		ConnectTreeNodes(pNode8,pNode61,pNode91);
+		ConnectTreeNodes(pNode61,pNode51,pNode71);
+		ConnectTreeNodes(pNode91,pNode72,pNode52);
+		Test("Test3",pNode8,false);
+	}
+
+	//二叉树的根节点为空指针
+	public void Test4()
+	{
+		Test("Test4",null,true);
+	}
+	
+	//只有一个结点的二叉树
+	public void Test5()
+	{
+		BinaryTreeNode pNode=new BinaryTreeNode(8);
+		Test("Test5",pNode,true);
+	}
+	
+	//所有值都相同的二叉树的二叉树
+	//   7
+	// 7   7
+	//7 7 7 7
+	public void Test6()
+	{
+		BinaryTreeNode pNode1=new BinaryTreeNode(7);
+		BinaryTreeNode pNode2=new BinaryTreeNode(7);
+		BinaryTreeNode pNode3=new BinaryTreeNode(7);
+		BinaryTreeNode pNode4=new BinaryTreeNode(7);
+		BinaryTreeNode pNode5=new BinaryTreeNode(7);
+		BinaryTreeNode pNode6=new BinaryTreeNode(7);
+		BinaryTreeNode pNode7=new BinaryTreeNode(7);
+		ConnectTreeNodes(pNode1,pNode2,pNode3);
+		ConnectTreeNodes(pNode2,pNode4,pNode5);
+		ConnectTreeNodes(pNode3,pNode6,pNode7);
+		Test("Test6",pNode1,true);
+	}
+	
+	public static void main(String[] args)
+	{
+		T28_SymmetricalBinaryTree main=new T28_SymmetricalBinaryTree();
+		main.Test1();
+		main.Test2();
+		main.Test3();
+		main.Test4();
+		main.Test5();
+		main.Test6();
+	}
+}
