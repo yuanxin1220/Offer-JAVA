@@ -1,0 +1,193 @@
+package offer;
+import java.util.*;
+
+public class T27_MirrorOfBinaryTree {
+	//从根结点开始遍历所有非叶节点
+	//交换左右子节点
+	public void MirrorRecursively(BinaryTreeNode pNode)
+	{
+		if((pNode==null)||(pNode.m_pLeft==null && pNode.m_pRight==null))
+			return;
+		
+		BinaryTreeNode pTemp=pNode.m_pLeft;
+		pNode.m_pLeft=pNode.m_pRight;
+		pNode.m_pRight=pTemp;
+		
+		if(pNode.m_pLeft!=null)
+			MirrorRecursively(pNode.m_pLeft);
+		if(pNode.m_pRight!=null)
+			MirrorRecursively(pNode.m_pRight);
+	}
+	
+	public void MirrorIteratively(BinaryTreeNode pRoot)
+	{
+		if (pRoot==null)
+			return;
+		Stack<BinaryTreeNode> stackTreeNode=new Stack<BinaryTreeNode>();
+		stackTreeNode.push(pRoot);
+		
+		while(!stackTreeNode.isEmpty())
+		{
+			BinaryTreeNode pNode=stackTreeNode.pop();
+			
+			BinaryTreeNode pTemp=pNode.m_pLeft;
+			pNode.m_pLeft=pNode.m_pRight;
+			pNode.m_pRight=pTemp;
+			
+			if(pNode.m_pLeft!=null)
+				stackTreeNode.push(pNode.m_pLeft);
+			if(pNode.m_pRight!=null)
+				stackTreeNode.push(pNode.m_pRight);
+		}		
+	}
+	
+	// =============== 测试代码 =============== 
+	//辅助测试代码
+	public void ConnectTreeNodes(BinaryTreeNode pParent,BinaryTreeNode pLeft,BinaryTreeNode pRight)
+	{
+		if(pParent!=null)
+		{
+			pParent.m_pLeft=pLeft;
+			pParent.m_pRight=pRight;
+		}
+	}
+	
+	//测试完全二叉树
+	//   8
+	// 6   10
+	//5 7 9  11
+	public void Test1()
+	{
+		System.out.println("=============== Test1 starts: ===============");
+		BinaryTreeNode pNode8=new BinaryTreeNode(8);
+		BinaryTreeNode pNode6=new BinaryTreeNode(6);
+		BinaryTreeNode pNode10=new BinaryTreeNode(10);
+		BinaryTreeNode pNode5=new BinaryTreeNode(5);
+		BinaryTreeNode pNode7=new BinaryTreeNode(7);
+		BinaryTreeNode pNode9=new BinaryTreeNode(9);
+		BinaryTreeNode pNode11=new BinaryTreeNode(11);
+		ConnectTreeNodes(pNode8,pNode6,pNode10);
+		ConnectTreeNodes(pNode6,pNode5,pNode7);
+		ConnectTreeNodes(pNode10,pNode9,pNode11);
+		
+		printTree printTree=new printTree();
+		printTree.printTree(pNode8);
+
+		System.out.println("====== Test1 MirrorRecursively: ======");
+		MirrorRecursively(pNode8);
+		printTree.printTree(pNode8);
+
+		System.out.println("====== Test1 MirrorIteratively: ======");
+		MirrorIteratively(pNode8);
+		printTree.printTree(pNode8);
+	}
+	
+	//测试左斜树
+	//	  8
+	//   7   
+	//  6 
+	// 5
+	//4
+	public void Test2()
+	{
+		System.out.println("=============== Test2 starts: ===============");
+		BinaryTreeNode pNode8=new BinaryTreeNode(8);
+		BinaryTreeNode pNode7=new BinaryTreeNode(7);
+		BinaryTreeNode pNode6=new BinaryTreeNode(6);
+		BinaryTreeNode pNode5=new BinaryTreeNode(5);
+		BinaryTreeNode pNode4=new BinaryTreeNode(4);
+
+		ConnectTreeNodes(pNode8,pNode7,null);
+		ConnectTreeNodes(pNode7,pNode6,null);
+		ConnectTreeNodes(pNode6,pNode5,null);
+		ConnectTreeNodes(pNode5,pNode4,null);
+
+		printTree printTree=new printTree();
+		printTree.printTree(pNode8);
+		
+		System.out.println("====== Test2 MirrorRecursively: ======");
+		MirrorRecursively(pNode8);
+		printTree.printTree(pNode8);		
+
+		System.out.println("====== Test2 MirrorIteratively: ======");
+		MirrorIteratively(pNode8);
+		printTree.printTree(pNode8);
+		
+	}
+	
+	//测试右斜树
+	// 8
+	//  7   
+	//   6 
+	//    5
+	//     4
+	public void Test3()
+	{
+		BinaryTreeNode pNode8=new BinaryTreeNode(8);
+		BinaryTreeNode pNode7=new BinaryTreeNode(7);
+		BinaryTreeNode pNode6=new BinaryTreeNode(6);
+		BinaryTreeNode pNode5=new BinaryTreeNode(5);
+		BinaryTreeNode pNode4=new BinaryTreeNode(4);
+		ConnectTreeNodes(pNode8,null,pNode7);
+		ConnectTreeNodes(pNode7,null,pNode6);
+		ConnectTreeNodes(pNode6,null,pNode5);
+		ConnectTreeNodes(pNode5,null,pNode4);
+		
+		
+		System.out.println("=============== Test3 starts: ===============");
+		printTree printTree=new printTree();
+		printTree.printTree(pNode8);
+		
+		System.out.println("====== Test3 MirrorRecursively: ======");
+		MirrorRecursively(pNode8);
+		printTree.printTree(pNode8);
+
+		System.out.println("====== Test3 MirrorIteratively: ======");
+		MirrorIteratively(pNode8);
+		printTree.printTree(pNode8);
+	}
+	
+	//测试空二叉树，根结点为空指针
+	public void Test4()
+	{
+		BinaryTreeNode pNode=null;
+		System.out.println("=============== Test4 starts: ===============");
+		printTree printTree=new printTree();
+		printTree.printTree(pNode);
+
+		System.out.println("====== Test4 MirrorRecursively: ======");
+		MirrorRecursively(pNode);
+		printTree.printTree(pNode);
+
+		System.out.println("====== Test4 MirrorIteratively: ======");
+		MirrorIteratively(pNode);
+		printTree.printTree(pNode);
+	}
+	
+	//测试只有一个结点的二叉树
+	public void Test5()
+	{
+		BinaryTreeNode pNode8=new BinaryTreeNode(8);
+		System.out.println("=============== Test5 starts: ===============");
+		printTree printTree=new printTree();
+		printTree.printTree(pNode8);
+		
+		System.out.println("====== Test5 MirrorRecursively: ======");
+		MirrorRecursively(pNode8);
+		printTree.printTree(pNode8);
+
+		System.out.println("====== Test5 MirrorIteratively: ======");
+		MirrorIteratively(pNode8);
+		printTree.printTree(pNode8);
+	}
+	
+	public static void main(String[] args)
+	{
+		T27_MirrorOfBinaryTree main=new T27_MirrorOfBinaryTree();
+		//main.Test1();
+		//main.Test2();
+		//main.Test3();
+		//main.Test4();
+		main.Test5();
+	}
+}
