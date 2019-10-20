@@ -1,0 +1,89 @@
+package offer;
+import java.util.*;
+
+class StackWithMin
+{
+	Stack<Integer> m_data=new Stack<Integer>();	//存放元素栈
+	Stack<Integer> m_min=new Stack<Integer>();	//辅助栈，data栈中每次进入一个元素，min辅助栈存放当前data栈中的最小元素
+	
+	//data栈和min栈进入元素
+	public void push(int value)
+	{
+		m_data.push(value);
+		if(m_min.size()==0 ||m_min.peek()>value)
+			m_min.push(value);
+		else
+			m_min.push(m_min.peek());
+	}
+	
+	//data栈和min栈弹出元素
+	public void pop()
+	{
+		if(m_data.size()>0 && m_min.size()>0)
+		{
+			m_data.pop();
+			m_min.pop();
+		}
+	}
+	
+	//data栈的栈顶元素
+	public Integer top()
+	{
+		return m_data.peek();
+	}
+	
+	//min栈的栈顶元素，栈顶元素为data栈中现有元素的最小元素
+	public Integer min()
+	{
+		return m_min.peek();
+	}
+
+	//判断数据栈是否为空
+	public boolean isEmpty()
+	{
+		return m_data.isEmpty();
+	}
+	
+	//得到数据栈的大小
+	public int size()
+	{
+		return m_data.size();
+	}
+}
+
+public class T30_MinInStack {
+	public static void Test(String testName,StackWithMin stack, int expected)
+	{
+		if(testName!=null)
+			System.out.print(testName+" begins: ");
+		if(stack.min()==expected)
+			System.out.println("passed");
+		else 
+			System.out.println("failed");
+	}
+	
+	public static void main(String[] args)
+	{
+		StackWithMin main=new StackWithMin();
+		main.push(3);
+		Test("Test1",main,3);
+
+		main.push(4);
+		Test("Test2",main,3);
+		
+		main.push(2);
+		Test("Test3",main,2);
+
+		main.push(1);
+		Test("Test4",main,1);
+
+		main.pop();
+		Test("Test5",main,2);
+
+		main.pop();
+		Test("Test6",main,3);
+
+		main.push(0);
+		Test("Test7",main,0);
+	}
+}
