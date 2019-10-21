@@ -1,0 +1,182 @@
+package offer;
+import java.util.*;
+//之字形打印二叉树
+public class T32_03_PrintTreesInZigzag {
+	/* 两个变量：①当前层中还没有打印的节点数 ②下一层节点的数目
+	 * 1.重复直到队列中所有节点被打印出来
+	 * 2.打印节点
+	 *  (1)若该节点有子节点，子节点入队
+	 *  (2)到队头取出最早进入队列的节点，打印
+	 * 3. 打印某一层时，把下一层的子节点保存到相应的栈
+	 * (1) 奇数层，先保存左子节点，再保存右子节点到第一个栈
+	 * (2) 偶数层，先保存右子节点，再保存左子节点到第二个栈
+	 */
+	public void Print(BinaryTreeNode pRoot)
+	{
+		if (pRoot==null)
+			return;
+		Stack<BinaryTreeNode> stack1=new Stack<BinaryTreeNode> ();
+		Stack<BinaryTreeNode> stack2=new Stack<BinaryTreeNode> ();
+		stack1.push(pRoot);
+		int current=1;
+		while(stack1.size()!=0 || stack2.size()!=0)
+		{
+			if(current==1)
+			{
+				BinaryTreeNode pNode=stack1.pop();
+				System.out.print(pNode.m_dValue+" ");
+				if(pNode.m_pLeft!=null)
+					stack2.push(pNode.m_pLeft);
+				if(pNode.m_pRight!=null)
+					stack2.push(pNode.m_pRight);
+				if(stack1.size()==0)
+				{
+					System.out.println();
+					current=2;
+				}
+			}
+			else
+			{
+				BinaryTreeNode pNode=stack2.pop();
+				System.out.print(pNode.m_dValue+" ");
+				if(pNode.m_pRight!=null)
+					stack1.push(pNode.m_pRight);
+				if(pNode.m_pLeft!=null)
+					stack1.push(pNode.m_pLeft);
+				if(stack2.size()==0)
+				{
+					System.out.println();
+					current=1;
+				}
+			}			
+		}
+	}
+	
+	
+	// ==================== 测试代码 ====================
+	//辅助测试代码
+	public void ConnectTreeNodes(BinaryTreeNode pParent,BinaryTreeNode pLeft,BinaryTreeNode pRight)
+	{
+		if(pParent!=null)
+		{
+			pParent.m_pLeft=pLeft;
+			pParent.m_pRight=pRight;
+		}
+	}
+			
+	public void Test(String testName,BinaryTreeNode pRoot)
+	{
+		if(testName!=null)
+			System.out.println(testName+" begins");
+		printTree printBinaryTree=new printTree();
+		printBinaryTree.printTree(pRoot);
+		System.out.println("The nodes from left to right in lines are: ");
+		Print(pRoot);
+	}
+		
+	//  			1
+	//		2              3
+	//	4     5        6      7
+	//7  9  10  11   12 13  14  15
+	public void Test1()
+	{
+		BinaryTreeNode pNode1=new BinaryTreeNode(1);
+		BinaryTreeNode pNode2=new BinaryTreeNode(2);
+		BinaryTreeNode pNode3=new BinaryTreeNode(3);
+		BinaryTreeNode pNode4=new BinaryTreeNode(4);
+		BinaryTreeNode pNode5=new BinaryTreeNode(5);
+		BinaryTreeNode pNode6=new BinaryTreeNode(6);
+		BinaryTreeNode pNode7=new BinaryTreeNode(7);
+		BinaryTreeNode pNode8=new BinaryTreeNode(8);
+		BinaryTreeNode pNode9=new BinaryTreeNode(9);
+		BinaryTreeNode pNode10=new BinaryTreeNode(10);
+		BinaryTreeNode pNode11=new BinaryTreeNode(11);
+		BinaryTreeNode pNode12=new BinaryTreeNode(12);
+		BinaryTreeNode pNode13=new BinaryTreeNode(13);
+		BinaryTreeNode pNode14=new BinaryTreeNode(14);
+		BinaryTreeNode pNode15=new BinaryTreeNode(15);
+
+		ConnectTreeNodes(pNode1,pNode2,pNode3);
+		ConnectTreeNodes(pNode2,pNode4,pNode5);
+		ConnectTreeNodes(pNode3,pNode6,pNode7);
+		ConnectTreeNodes(pNode4,pNode8,pNode9);
+		ConnectTreeNodes(pNode5,pNode10,pNode11);
+		ConnectTreeNodes(pNode6,pNode12,pNode13);
+		ConnectTreeNodes(pNode7,pNode14,pNode15);
+		
+		Test("Test1",pNode1);
+	}
+		
+	//  		5
+	// 		  /
+	//		 4
+	//		/
+	//	   3
+	//	  /
+	//   2
+	//  /
+	// 1
+	public void Test2()
+	{
+		BinaryTreeNode pNode5=new BinaryTreeNode(5);
+		BinaryTreeNode pNode4=new BinaryTreeNode(4);
+		BinaryTreeNode pNode3=new BinaryTreeNode(3);
+		BinaryTreeNode pNode2=new BinaryTreeNode(2);
+		BinaryTreeNode pNode1=new BinaryTreeNode(1);
+
+		ConnectTreeNodes(pNode5,pNode4,null);
+		ConnectTreeNodes(pNode4,pNode3,null);
+		ConnectTreeNodes(pNode3,pNode2,null);
+		ConnectTreeNodes(pNode2,pNode1,null);
+			
+		Test("Test2",pNode5);
+	}
+		
+	// 1
+	//  \
+	//   2
+	//    \
+	//     3
+	//      \
+	//       4
+	//        \
+	//         5
+	public void Test3()
+	{
+		BinaryTreeNode pNode1=new BinaryTreeNode(1);
+		BinaryTreeNode pNode2=new BinaryTreeNode(2);
+		BinaryTreeNode pNode3=new BinaryTreeNode(3);
+		BinaryTreeNode pNode4=new BinaryTreeNode(4);
+		BinaryTreeNode pNode5=new BinaryTreeNode(5);
+		
+		ConnectTreeNodes(pNode1,null,pNode2);
+		ConnectTreeNodes(pNode2,null,pNode3);
+		ConnectTreeNodes(pNode3,null,pNode4);
+		ConnectTreeNodes(pNode4,null,pNode5);
+			
+		Test("Test3",pNode1);
+	}
+		
+	// 树中只有1个结点
+	public void Test4()
+	{
+		BinaryTreeNode pNode1=new BinaryTreeNode(1);
+		Test("Test4",pNode1);
+	}
+		
+	// 树中没有节点
+	public void Test5()
+	{
+		Test("Tes5",null);
+	}
+		
+	public static void main(String[] args)
+	{
+		T32_03_PrintTreesInZigzag main=new T32_03_PrintTreesInZigzag();
+		main.Test1();
+		//main.Test2();
+		//main.Test3();
+		//main.Test4();
+		//main.Test5();
+	}	
+}
