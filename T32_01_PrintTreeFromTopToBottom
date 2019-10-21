@@ -1,0 +1,145 @@
+package offer;
+import java.util.*;
+
+//不分行，从上到下打印二叉树
+public class T32_01_PrintTreeFromTopToBottom {
+	/* 1.重复直到队列中所有节点被打印出来
+	 * 2.打印节点
+	 *  (1)若该节点有子节点，子节点入队
+	 *  (2)到队头取出最早进入队列的节点，打印
+	 */
+	public void PrintFromTopToBottom(BinaryTreeNode pRoot)
+	{
+		if(pRoot==null)
+			return;
+		LinkedList<BinaryTreeNode> dequeTreeNode=new LinkedList<BinaryTreeNode>();
+		dequeTreeNode.offer(pRoot);
+		while(dequeTreeNode.size()!=0)
+		{
+			BinaryTreeNode pNode=dequeTreeNode.poll();
+			System.out.print(pNode.m_dValue+" ");
+			if(pNode.m_pLeft!=null)
+				dequeTreeNode.offer(pNode.m_pLeft);
+			
+			if(pNode.m_pRight!=null)
+				dequeTreeNode.offer(pNode.m_pRight);
+		}
+		System.out.println();		
+	}
+	
+	// ==================== 测试代码 ====================
+	//辅助测试代码
+	public void ConnectTreeNodes(BinaryTreeNode pParent,BinaryTreeNode pLeft,BinaryTreeNode pRight)
+	{
+		if(pParent!=null)
+		{
+			pParent.m_pLeft=pLeft;
+			pParent.m_pRight=pRight;
+		}
+	}
+		
+	public void Test(String testName,BinaryTreeNode pRoot)
+	{
+		if(testName!=null)
+			System.out.println(testName+" begins");
+		printTree printBinaryTree=new printTree();
+		printBinaryTree.printTree(pRoot);
+		System.out.println("The nodes from top to bottom, from left to right are: ");
+		PrintFromTopToBottom(pRoot);
+	}
+	
+	//      10
+	//   /      \
+	//  6        14
+	//  /\        /\
+	// 4  8     12  16
+	public void Test1()
+	{
+		BinaryTreeNode pNode10=new BinaryTreeNode(10);
+		BinaryTreeNode pNode6=new BinaryTreeNode(6);
+		BinaryTreeNode pNode14=new BinaryTreeNode(14);
+		BinaryTreeNode pNode4=new BinaryTreeNode(4);
+		BinaryTreeNode pNode8=new BinaryTreeNode(8);
+		BinaryTreeNode pNode12=new BinaryTreeNode(12);
+		BinaryTreeNode pNode16=new BinaryTreeNode(16);
+
+		ConnectTreeNodes(pNode10,pNode6,pNode14);
+		ConnectTreeNodes(pNode6,pNode4,pNode8);
+		ConnectTreeNodes(pNode14,pNode12,pNode16);
+		
+		Test("Test1",pNode10);
+	}
+	
+	//  		5
+	// 		  /
+	//		 4
+	//		/
+	//	   3
+	//	  /
+	//   2
+	//  /
+	// 1
+	public void Test2()
+	{
+		BinaryTreeNode pNode5=new BinaryTreeNode(5);
+		BinaryTreeNode pNode4=new BinaryTreeNode(4);
+		BinaryTreeNode pNode3=new BinaryTreeNode(3);
+		BinaryTreeNode pNode2=new BinaryTreeNode(2);
+		BinaryTreeNode pNode1=new BinaryTreeNode(1);
+
+		ConnectTreeNodes(pNode5,pNode4,null);
+		ConnectTreeNodes(pNode4,pNode3,null);
+		ConnectTreeNodes(pNode3,pNode2,null);
+		ConnectTreeNodes(pNode2,pNode1,null);
+		
+		Test("Test2",pNode5);
+	}
+	
+	// 1
+	//  \
+	//   2
+	//    \
+	//     3
+	//      \
+	//       4
+	//        \
+	//         5
+	public void Test3()
+	{
+		BinaryTreeNode pNode1=new BinaryTreeNode(1);
+		BinaryTreeNode pNode2=new BinaryTreeNode(2);
+		BinaryTreeNode pNode3=new BinaryTreeNode(3);
+		BinaryTreeNode pNode4=new BinaryTreeNode(4);
+		BinaryTreeNode pNode5=new BinaryTreeNode(5);
+
+		ConnectTreeNodes(pNode1,null,pNode2);
+		ConnectTreeNodes(pNode2,null,pNode3);
+		ConnectTreeNodes(pNode3,null,pNode4);
+		ConnectTreeNodes(pNode4,null,pNode5);
+		
+		Test("Test3",pNode1);
+	}
+	
+	// 树中只有1个结点
+	public void Test4()
+	{
+		BinaryTreeNode pNode1=new BinaryTreeNode(1);
+		Test("Test4",pNode1);
+	}
+	
+	// 树中没有节点
+	public void Test5()
+	{
+		Test("Tes5",null);
+	}
+	
+	public static void main(String[] args)
+	{
+		T32_01_PrintTreeFromTopToBottom main=new T32_01_PrintTreeFromTopToBottom();
+		//main.Test1();
+		//main.Test2();
+		//main.Test3();
+		//main.Test4();
+		main.Test5();
+	}
+}
