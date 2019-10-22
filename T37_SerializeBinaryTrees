@@ -1,0 +1,107 @@
+package offer;
+/* 1. 利用前序遍历序列化二叉树，再从记录的字符串中反序列化二叉树
+ *  ①根结点 ②左子树 ③右子树
+ * 2. 遇到空节点需要用特殊字符加以标记
+ */
+public class T37_SerializeBinaryTrees {
+	//二叉树序列化
+	public String Serialization(BinaryTreeNode pRoot)
+	{
+		if(pRoot==null)
+			return null;
+		//用来保存二叉树序列化结果的字符串
+		StringBuffer stream=new StringBuffer();
+		Serialization(pRoot,stream);
+		stream.deleteCharAt(stream.lastIndexOf(","));
+		return stream.toString();
+	}
+	public void Serialization(BinaryTreeNode pRoot,StringBuffer stream)
+	{
+		if(pRoot==null)
+			stream.append("$,");
+		else
+		{
+			stream.append(pRoot.m_dValue+",");	//根结点
+			Serialization(pRoot.m_pLeft,stream);	//左子树
+			Serialization(pRoot.m_pRight,stream);	//右子树
+		}
+	}
+	
+	//二叉树反序列化
+	int i=0;
+	public BinaryTreeNode Deserialization(String stream)
+	{
+		if(stream==null)
+			return null;
+		String[] streamDeser=stream.split(",");
+		i=-1;
+		return Deserialization(streamDeser);
+	}
+	public BinaryTreeNode Deserialization(String[] stream)
+	{
+		BinaryTreeNode pRoot;
+		if(stream[++i].equals("$"))
+			pRoot=null;
+		else
+		{
+			pRoot=new BinaryTreeNode(Integer.valueOf(stream[i]));	//根结点
+			pRoot.m_pLeft=Deserialization(stream);	//左子树
+			pRoot.m_pRight=Deserialization(stream);	//右子树
+		}
+		return pRoot;
+	}
+	
+	public void Test(String testName,String stream)
+	{
+		if(testName!=null)
+			System.out.println(testName);
+		//反序列化
+		BinaryTreeNode pRoot=Deserialization(stream);
+		printTree print=new printTree();
+		print.printTree(pRoot);
+		//序列化
+		String serial=Serialization(pRoot);
+		System.out.println(serial);
+	}
+	//完全二叉树
+	public void Test1()
+	{
+		String test="8,6,5,$,$,7,$,$,10,9,$,$,11,$,$";
+		Test("Test1",test);
+	}
+	//左斜树
+	public void Test2()
+	{
+		String test="5,4,3,2,$,$,$,$,$";
+		Test("Test2",test);
+	}
+	//右斜树
+	public void Test3()
+	{
+		String test="5,$,4,$,3,$,2,$,$";
+		Test("Test3",test);
+	}
+	//所有节点的值都相同
+	public void Test4()
+	{
+		String test="5,$,5,$,5,5,5,5,5,$,$,$,5,$,5,$,$,$,$";
+		Test("Test4",test);
+	}
+	//鲁棒性测试：输入为空
+	public void Test5()
+	{
+		Test("Test5",null);
+	}
+	
+	public static void main(String[] args)
+	{
+		T37_SerializeBinaryTrees main= new T37_SerializeBinaryTrees();
+		main.Test1();
+		//main.Test2();
+		//main.Test3();
+		//main.Test4();
+		//main.Test5();
+	}
+	
+	
+}
