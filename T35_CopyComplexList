@@ -1,0 +1,150 @@
+package offer;
+public class T35_CopyComplexList {
+	public ComplexListNode Clone(ComplexListNode pHead)
+	{
+		CloneNodes(pHead);
+		ConnectSiblingNodes(pHead);
+		return ReconnectNodes(pHead);
+	}
+	
+	/* 复制原始链表的任意结点N并创建结点N'
+	 * 把N'链接到N的后面
+	 */
+	public void CloneNodes(ComplexListNode pHead)
+	{
+		ComplexListNode pNode=pHead;
+		while(pNode!=null)
+		{
+			ComplexListNode pCloned=new ComplexListNode(pNode.m_nValue);
+			pCloned.m_pNext=pNode.m_pNext;
+			pCloned.m_pSibling=null;
+			
+			pNode.m_pNext=pCloned;
+			pNode=pCloned.m_pNext;
+		}
+	}
+	/* 若原始链表上的结点N的m_pSibling指向S
+	 * 对应的复制结点N'的m_pSibling指向S'
+	 */
+	public void ConnectSiblingNodes(ComplexListNode pHead)
+	{
+		ComplexListNode pNode=pHead;
+		while(pNode!=null)
+		{
+			ComplexListNode pCloned=pNode.m_pNext;
+			if(pNode.m_pSibling!=null)
+				pCloned.m_pSibling=pNode.m_pSibling.m_pNext;
+			
+			pNode=pCloned.m_pNext;
+		}
+	}
+	/*把第二步得到的列表拆分成两个链表
+	 * (1) 奇数位置上的结点组成原始链表
+	 * (2) 偶数位置上的结点组成复制出来的链表
+	 */
+	public ComplexListNode ReconnectNodes(ComplexListNode pHead)
+	{
+		ComplexListNode pNode=pHead;
+		ComplexListNode pCloneHead=null;
+		ComplexListNode pCloneNode=null;
+		
+		if(pHead!=null)
+		{
+			pCloneHead=pNode.m_pNext;
+			pCloneNode=pNode.m_pNext;
+			
+			pNode.m_pNext=pCloneNode.m_pNext;
+			pNode=pNode.m_pNext;
+		}
+		
+		while(pNode!=null)
+		{
+			pCloneNode.m_pNext=pNode.m_pNext;
+			pCloneNode=pCloneNode.m_pNext;
+			
+			pNode.m_pNext=pCloneNode.m_pNext;
+			pNode=pNode.m_pNext;			
+		}
+		return pCloneHead;
+	}
+
+	// ====================测试代码====================
+	public void Test(String testName,ComplexListNode pHead)
+	{
+		if(testName!=null)
+			System.out.println(testName);
+		T35_ComplexList print=new T35_ComplexList();
+		
+		System.out.println("The orginal list is: ");
+		print.PrintList(pHead);
+		
+		ComplexListNode pClonedHead=Clone(pHead);
+		System.out.println("The cloned list is: ");
+		print.PrintList(pClonedHead);		
+	}
+	// 普通测试链表
+	public void Test1()
+	{
+		ComplexListNode pNode1=new ComplexListNode(1);
+		ComplexListNode pNode2=new ComplexListNode(2);
+		ComplexListNode pNode3=new ComplexListNode(3);
+		ComplexListNode pNode4=new ComplexListNode(4);
+		ComplexListNode pNode5=new ComplexListNode(5);
+		pNode1.BuildNodes(pNode2, pNode3);
+		pNode2.BuildNodes(pNode3, pNode5);
+		pNode3.BuildNodes(pNode4, null);
+		pNode4.BuildNodes(pNode5, null);
+		Test("Test1",pNode1);
+	}
+	//m_pSibling指向结点自身
+	public void Test2()
+	{
+		ComplexListNode pNode1=new ComplexListNode(1);
+		ComplexListNode pNode2=new ComplexListNode(2);
+		ComplexListNode pNode3=new ComplexListNode(3);
+		ComplexListNode pNode4=new ComplexListNode(4);
+		ComplexListNode pNode5=new ComplexListNode(5);
+		pNode1.BuildNodes(pNode2, null);
+		pNode2.BuildNodes(pNode3, pNode5);
+		pNode3.BuildNodes(pNode4, pNode3);
+		pNode4.BuildNodes(pNode5, pNode2);
+		Test("Test2",pNode1);		
+	}
+	//两个节点的m_pSibling形成环状结构
+	public void Test3()
+	{
+		ComplexListNode pNode1=new ComplexListNode(1);
+		ComplexListNode pNode2=new ComplexListNode(2);
+		ComplexListNode pNode3=new ComplexListNode(3);
+		ComplexListNode pNode4=new ComplexListNode(4);
+		ComplexListNode pNode5=new ComplexListNode(5);
+		pNode1.BuildNodes(pNode2, null);
+		pNode2.BuildNodes(pNode3, pNode4);
+		pNode3.BuildNodes(pNode4, null);
+		pNode4.BuildNodes(pNode5, pNode2);
+		Test("Test3",pNode1);		
+		
+	}
+	//链表中只有一个节点
+	public void Test4()
+	{
+		ComplexListNode pNode1=new ComplexListNode(1);
+		pNode1.BuildNodes(null, pNode1);
+		Test("Test4",pNode1);
+	}
+	//鲁棒性测试，头结点为空
+	public void Test5()
+	{
+		Test("Test5",null);
+	}
+	
+	public static void main(String[] args)
+	{
+		T35_CopyComplexList main =new T35_CopyComplexList();
+		//main.Test1();
+		//main.Test2();
+		//main.Test3();
+		//main.Test4();
+		main.Test5();
+	}
+}
