@@ -1,0 +1,56 @@
+package offer;
+/*字符串的排列
+ * 1. 把第一个字符和后面所有的字符交换
+ * 2. 固定第一个字符，求后面所有字符的排列
+ */
+
+public class T38_StringPermutation {
+	public void Permutation(String pStr)
+	{
+		//若字符串为空，直接返回
+		if(pStr==null)
+			return;
+		//否则将字符串转换为字符数字，并从字符0位置开始进行全排列
+		Permutation(pStr.toCharArray(),0);
+	}
+	
+	public void Permutation(char[] pStr,int pos)
+	{
+		if(pos==pStr.length-1)
+			System.out.println(pStr);
+		for(int i=pos;i<pStr.length;i++)
+		{
+			//首部字符和它后面的（包括自己）进行交换
+			char tmp=pStr[i];
+			pStr[i]=pStr[pos];
+			pStr[pos]=tmp;
+			
+			//递归求后面的字符排列
+			Permutation(pStr,pos+1);
+			
+			//由于前面交换了一下，所以pStr的内容改变了，要还原回来
+			tmp=pStr[i];
+			pStr[i]=pStr[pos];
+			pStr[pos]=tmp;
+		}
+	}
+	
+	// ====================测试代码====================
+	public void Test(String pStr)
+	{
+		if(pStr==null)
+			System.out.println("Test for null begins: ");
+		else
+			System.out.println("Test for "+pStr+" begins: ");
+		Permutation(pStr);
+	}
+	public static void main(String[] args)
+	{
+		T38_StringPermutation main=new T38_StringPermutation();
+		main.Test("");
+		main.Test(null);
+		main.Test("a");
+		main.Test("ab");
+		main.Test("abc");
+	}
+}
