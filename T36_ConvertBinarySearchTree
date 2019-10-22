@@ -1,0 +1,165 @@
+package offer;
+//二叉搜索树与双向链表
+public class T36_ConvertBinarySearchTree {
+	public BinaryTreeNode Convert(BinaryTreeNode pRootOfTree)
+	{
+		BinaryTreeNode pLastNodeInList=null;
+		pLastNodeInList=ConvertNode(pRootOfTree,pLastNodeInList);
+		BinaryTreeNode pHeadOfList=pLastNodeInList;
+		while(pHeadOfList!=null && pHeadOfList.m_pLeft!=null)
+			pHeadOfList=pHeadOfList.m_pLeft;
+		return pHeadOfList;
+	}
+	/* pLastNodeInList指向已经转换好链表的最后一个节点
+	 * 1.左子树转换成一个有序链表，链表中的最后一个节点是左子树最大的节点
+	 * 2.当前最大值的节点与根结点链接起来，链表中的最后一个节点是根节点
+	 * 3.转换右子树，根节点与右子树中最小的节点连接起来，链表中最后一个节点是右子树最小的节点
+	 */
+	public BinaryTreeNode ConvertNode(BinaryTreeNode pNode,BinaryTreeNode pLastNodeInList)
+	{
+		//更新当前节点
+		if(pNode==null)
+			return null;
+		BinaryTreeNode pCurrent=pNode;
+		
+		//节点的左子树转换为排序链表
+		if(pCurrent.m_pLeft!=null)
+			pLastNodeInList=ConvertNode(pCurrent.m_pLeft,pLastNodeInList);
+				
+		/* 当前节点与链表的最后一个节点链接
+		 * ①左子树链表最后一个节点(pLastNodeInList)与根结点(pNode)链接
+		 * ②根节点(pLastNodeInList)与右子树中最小的节点(pNode)链接
+		 * 更新当前链表的最后一个节点
+		 */
+		pCurrent.m_pLeft=pLastNodeInList;
+		if(pLastNodeInList!=null)
+			pLastNodeInList.m_pRight=pCurrent;
+		pLastNodeInList=pCurrent;
+		
+		//节点的右子树转换为排序链表
+		if(pCurrent.m_pRight!=null)
+			pLastNodeInList=ConvertNode(pCurrent.m_pRight,pLastNodeInList);
+		return pLastNodeInList;
+	}
+
+	// ====================测试代码====================
+	public void PrintDoubleLinkedList(BinaryTreeNode pHeadOfList)
+	{
+		BinaryTreeNode pNode=pHeadOfList;
+		System.out.print("The nodes from left to right are: ");
+		while(pNode!=null && pNode.m_pRight!=null)
+		{
+			System.out.print(pNode.m_dValue+" ");
+			pNode=pNode.m_pRight;
+		}
+		if(pNode!=null)
+			System.out.println(pNode.m_dValue+" ");
+
+		System.out.print("The nodes from right to left are: ");
+		while(pNode!=null)
+		{
+			System.out.print(pNode.m_dValue+" ");
+			pNode=pNode.m_pLeft;
+		}
+		System.out.println();
+	}
+
+	public void Test(String testName,BinaryTreeNode pRootOfTree)
+	{
+		if(testName!=null)
+			System.out.println(testName+" begins: ");
+		//树的打印
+		printTree print = new printTree();
+		print.printTree(pRootOfTree);
+		//链表转换
+		BinaryTreeNode pHeadOfList=Convert(pRootOfTree);
+		PrintDoubleLinkedList(pHeadOfList);
+	}
+	
+	//完全二叉树
+	//  	 10
+	//	   /    \
+	//	  6      14
+	//	 /\      /\
+	//	4  8   12  16
+	public void Test1()
+	{
+		BinaryTreeNode pNode10=new BinaryTreeNode(10);
+		BinaryTreeNode pNode6=new BinaryTreeNode(6);
+		BinaryTreeNode pNode14=new BinaryTreeNode(14);
+		BinaryTreeNode pNode4=new BinaryTreeNode(4);
+		BinaryTreeNode pNode8=new BinaryTreeNode(8);
+		BinaryTreeNode pNode12=new BinaryTreeNode(12);
+		BinaryTreeNode pNode16=new BinaryTreeNode(16);
+		pNode10.ConnectTreeNodes(pNode6, pNode14);
+		pNode6.ConnectTreeNodes(pNode4, pNode8);
+		pNode14.ConnectTreeNodes(pNode12, pNode16);
+		Test("Test1",pNode10);
+	}
+	
+	/* 左斜树
+	 *   	   5
+	 *		 4
+	 *	   3
+	 *	 2
+	 * 1
+	*/
+	public void Test2()
+	{
+		BinaryTreeNode pNode5=new BinaryTreeNode(5);
+		BinaryTreeNode pNode4=new BinaryTreeNode(4);
+		BinaryTreeNode pNode3=new BinaryTreeNode(3);
+		BinaryTreeNode pNode2=new BinaryTreeNode(2);
+		BinaryTreeNode pNode1=new BinaryTreeNode(1);
+		pNode5.ConnectTreeNodes(pNode4, null);
+		pNode4.ConnectTreeNodes(pNode3, null);
+		pNode3.ConnectTreeNodes(pNode2, null);
+		pNode2.ConnectTreeNodes(pNode1, null);
+		
+		Test("Test2",pNode5);
+	}
+	
+	/*右斜树
+	 *  1
+	 *   2
+	 *     3
+	 *       4
+	 *         5
+	 */
+	public void Test3()
+	{
+		BinaryTreeNode pNode1=new BinaryTreeNode(1);
+		BinaryTreeNode pNode2=new BinaryTreeNode(2);
+		BinaryTreeNode pNode3=new BinaryTreeNode(3);
+		BinaryTreeNode pNode4=new BinaryTreeNode(4);
+		BinaryTreeNode pNode5=new BinaryTreeNode(5);
+		pNode1.ConnectTreeNodes(null, pNode2);
+		pNode2.ConnectTreeNodes(null, pNode3);
+		pNode3.ConnectTreeNodes(null, pNode4);
+		pNode4.ConnectTreeNodes(null, pNode5);
+		Test("Test3",pNode1);
+	}
+	
+	//树中只有一个节点
+	public void Test4()
+	{
+		BinaryTreeNode pNode1=new BinaryTreeNode(1);
+		Test("Test4",pNode1);
+	}
+	
+	//鲁棒性：空指针
+	public void Test5()
+	{
+		Test("Test5",null);
+	}
+	
+	public static void main(String[] args)
+	{
+		T36_ConvertBinarySearchTree main=new T36_ConvertBinarySearchTree();
+		//main.Test1();
+		//main.Test2();
+		//main.Test3();
+		//main.Test4();
+		main.Test5();
+	}
+}
