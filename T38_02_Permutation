@@ -1,0 +1,57 @@
+package offer;
+import java.util.*;
+public class T38_02_Permutation {
+	public int num_result=0;
+	public void Permutation(char[] pStr)
+	{
+		Permutation(pStr,0);
+	}
+	
+	public void Permutation(char[] pStr,int pos)
+	{
+		//记录有没有满足八皇后条件的全排列
+		if(pos==pStr.length-1)
+		{
+			boolean result=true;
+			for(int i=0;i<8;++i)
+			{
+				for(int j=0;j<8;++j)
+				{
+					if(i!=j)
+						result=result && (Math.abs(pStr[i]-pStr[j])!=Math.abs(i-j));						
+				}
+			}
+			if(result==true)
+			{
+				num_result+=1;
+				//for(int i=0;i<8;++i)
+				//{
+					//System.out.println("The "+i+"th node is located in row "+i+" and column"+pStr[i]);
+				//}
+			}
+		}
+		
+		for(int i=pos;i<pStr.length;i++)
+		{
+			//首字符与后面字符（包括自己）进行交换
+			char tmp=pStr[pos];
+			pStr[pos]=pStr[i];
+			pStr[i]=tmp;
+			
+			//递归对后面的字符进行全排列
+			Permutation(pStr,pos+1);
+			
+			//由于前面交换了一下，pStr内容改变，需要还原回去
+			tmp=pStr[pos];
+			pStr[pos]=pStr[i];
+			pStr[i]=tmp;
+		}
+	}
+	
+	public static void main(String[] args)
+	{
+		T38_02_Permutation main=new T38_02_Permutation();
+		main.Permutation("01234567".toCharArray());
+		System.out.println("The total number of available results is "+main.num_result);
+	}
+}
