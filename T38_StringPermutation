@@ -5,6 +5,7 @@ package offer;
  */
 
 public class T38_StringPermutation {
+	//排列
 	public void Permutation(String pStr)
 	{
 		//若字符串为空，直接返回
@@ -12,8 +13,8 @@ public class T38_StringPermutation {
 			return;
 		//否则将字符串转换为字符数字，并从字符0位置开始进行全排列
 		Permutation(pStr.toCharArray(),0);
-	}
-	
+	}	
+	//求pos后面的字符排列
 	public void Permutation(char[] pStr,int pos)
 	{
 		if(pos==pStr.length-1)
@@ -34,23 +35,79 @@ public class T38_StringPermutation {
 			pStr[pos]=tmp;
 		}
 	}
+
+	//组合		
+	public void combination(char[] pStr)
+	{
+		//若字符数组为空，直接返回
+		if(pStr==null)
+			return;
+		char[] sub_pStr=new char[pStr.length];//存储子组合数据的数组
+		//全组合问题就是所有元素(n)中选一个元素的组合，加上选2个元素的组合...加上选n个元素的组合的和
+		for(int i=0;i<pStr.length;++i)
+		{
+			final int m=i+1;
+			combination(pStr,pStr.length,m,sub_pStr,m);
+		}
+	}	
+	/*n个元素选m个元素的组合问题
+	 * 1. 若组合中包含第一个字符，在剩余n-1个字符中选m-1个字符
+	 * 2. 若组合中不包含第一个字符，在剩余n-1个字符中选m个字符
+	 */
+	public void combination(char[] pStr,int n,int m,char[] sub_pStr,int subn)
+	{
+		if(m==0)	//出口
+		{
+			for(int i=0;i<subn;++i)
+				System.out.print(sub_pStr[i]);
+			System.out.println();
+		}
+		else
+		{
+			for(int i=n;i>=m;--i)	//从后往前依次选定一个
+			{
+				sub_pStr[m-1]=pStr[i-1];//选定一个后
+				combination(pStr,i-1,m-1,sub_pStr,subn);//从前i-1个里面选m-1个进行递归
+			}
+		}
+	}
 	
 	// ====================测试代码====================
-	public void Test(String pStr)
+	public void Test_Permutation(String pStr)
 	{
 		if(pStr==null)
-			System.out.println("Test for null begins: ");
+			System.out.println("Test_Permutation for null begins: ");
 		else
-			System.out.println("Test for "+pStr+" begins: ");
+			System.out.println("Test_Permutation for "+pStr+" begins: ");
 		Permutation(pStr);
+	}
+	public void Test_Combination(char[] pStr)
+	{
+		if(pStr==null)
+			System.out.println("Test_Permutation for null begins: ");
+		else
+		{
+			System.out.print("Test_Permutation for ");	
+
+			for(int i=0;i<pStr.length;++i)
+				System.out.print(pStr[i]);
+			System.out.println(" begins: ");
+		}	
+		combination(pStr);
 	}
 	public static void main(String[] args)
 	{
 		T38_StringPermutation main=new T38_StringPermutation();
-		main.Test("");
-		main.Test(null);
-		main.Test("a");
-		main.Test("ab");
-		main.Test("abc");
+		//main.Test_Permutation("");
+		//main.Test_Permutation(null);
+		//main.Test_Permutation("a");
+		//main.Test_Permutation("ab");
+		//main.Test_Permutation("abc");
+
+		main.Test_Combination("".toCharArray());
+		main.Test_Combination(null);
+		main.Test_Combination("a".toCharArray());
+		main.Test_Combination("ab".toCharArray());
+		main.Test_Combination("abc".toCharArray());
 	}
 }
