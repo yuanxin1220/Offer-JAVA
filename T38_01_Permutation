@@ -1,0 +1,67 @@
+package offer;
+/*求出8个数字的全排列，判断有没有一个排列符合题目给定条件
+ * a[1]+a[2]+a[3]+a[4]=a[5]+a[6]+a[7]+a[8]
+ * a[1]+a[3]+a[5]+a[7]=a[2]+a[4]+a[6]+a[8]
+ * a[1]+a[2]+a[5]+a[6]=a[3]+a[4]+a[7]+a[8]
+ */
+public class T38_01_Permutation {
+	public void Permutation(String pStr)
+	{
+		//若字符串为空或者字符个数不为8，直接返回
+		if(pStr==null || pStr.toCharArray().length!=8)
+		{
+			System.out.println("The input doesn't satisfy the requirement.");
+			return;
+		}
+		
+		//将字符串转换为数组，从第一位开始进行全排，判断有没有符合给定条件的
+		boolean result=Permutation(pStr.toCharArray(),0);
+		if(result==true)
+			System.out.println("There exists the solution");
+		else
+			System.out.println("There doesn't exist the solution");
+			
+	}
+	//求pos后面的字符排列
+	public boolean Permutation(char[] pStr,int pos)
+	{
+		//记录有没有符合给定条件的全排列
+		boolean result=false;
+		if(pos==pStr.length-1)
+		{
+			if((pStr[0]+pStr[1]+pStr[2]+pStr[3]==pStr[4]+pStr[5]+pStr[6]+pStr[7])&&
+					(pStr[0]+pStr[2]+pStr[4]+pStr[6]==pStr[1]+pStr[3]+pStr[5]+pStr[7])&&
+					(pStr[0]+pStr[1]+pStr[4]+pStr[5]==pStr[2]+pStr[3]+pStr[6]+pStr[7]))
+			{
+				//System.out.println(pStr);
+				result=true;
+			}
+			
+		}
+		for(int i=pos;i<pStr.length;i++)
+		{
+			//首部字符和后面的字符进行交换（包括自己）
+			char tmp=pStr[pos];
+			pStr[pos]=pStr[i];
+			pStr[i]=tmp;
+			
+			//递归求后面字符的全排列
+			result=Permutation(pStr,pos+1);
+			
+			//由于前面交换了一下，pStr内容改变，需要还原回去
+			tmp=pStr[pos];
+			pStr[pos]=pStr[i];
+			pStr[i]=tmp;
+		}
+		return result;
+	}
+	
+	public static void main(String[] args)
+	{
+		T38_01_Permutation main=new T38_01_Permutation();
+		main.Permutation("12312322");
+		main.Permutation("12318322");
+		main.Permutation("");
+		main.Permutation("13212223");
+	}
+}
