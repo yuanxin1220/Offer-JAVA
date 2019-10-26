@@ -1,0 +1,77 @@
+package offer;
+import java.util.PriorityQueue;
+import java.util.Comparator;
+public class T41_StreamMedian {
+	PriorityQueue<Integer> minHeap=new PriorityQueue<Integer>();
+	//通过插入自定义的Comparator函数实现大顶堆
+	PriorityQueue<Integer> maxHeap=new PriorityQueue<Integer>(11,new Comparator<Integer>() {//大顶堆，容量11
+		public int compare(Integer i1,Integer i2)
+		{
+			return i2-i1;
+		}
+	});
+	
+	
+	public void Insert(Integer num)
+	{
+		if(((minHeap.size()+maxHeap.size())&1)==0) {//偶数时，下个数字加入小顶堆
+			if(!maxHeap.isEmpty() && maxHeap.peek()>num)
+			{
+				maxHeap.offer(num);
+				num=maxHeap.poll();
+			}
+			minHeap.offer(num);
+		}else
+		{//奇数时，下一个数字放入大顶堆
+			if(!minHeap.isEmpty() && minHeap.peek()<num)
+			{
+				minHeap.offer(num);
+				num=minHeap.poll();
+			}
+			maxHeap.offer(num);
+		}
+	}
+	
+	public double GetMedian() {
+		if((minHeap.size()+maxHeap.size())==0)
+			throw new RuntimeException();
+		double median;
+		if(((minHeap.size()+maxHeap.size())&1)==0)		
+			median=(maxHeap.peek()+minHeap.peek())/2.0;		
+		else
+			median=minHeap.peek();
+		return median;
+	}
+	
+	//======================测试代码=======================
+	public void Test(String testName, double expected)
+	{
+		if(testName!=null)
+			System.out.print(testName);
+		if(Math.abs(GetMedian()-expected)<0.0000001)
+			System.out.println(" passed.");
+		else
+			System.out.println(" failed.");
+	}
+	
+	public static void main(String[] args)
+	{
+		T41_StreamMedian main= new T41_StreamMedian();
+		System.out.print("Test0");
+		try
+		{
+			main.GetMedian();
+			System.out.println(" failed.");
+		}
+		catch(RuntimeException e)
+		{
+			System.out.println(" passed.");
+		}
+		main.Insert(5);
+		main.Test("Test1", 5);
+		main.Insert(2);
+		main.Test("Test2", 3.5);
+		main.Insert(3);
+		main.Test("Test3", 3);
+	}
+}
