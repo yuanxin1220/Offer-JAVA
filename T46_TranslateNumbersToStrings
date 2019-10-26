@@ -1,0 +1,60 @@
+package offer;
+
+public class T46_TranslateNumbersToStrings {
+	/*把数字翻译成字符串的翻译方法个数
+	 * f(i)=f(i+1)+g(i,i+1)*f(i+2)
+	 * 第i和i+1位数字拼接起来在10-26则g(i,i+1)=1
+	 */
+	public int GetTranslationCount(int number)
+	{
+		//输入的处理：	1.判断有效性数字	2.数字变字符数组
+		if(number<0)
+			return 0;
+		String numberInString=String.valueOf(number);
+		int length=numberInString.length();
+		
+		//翻译方法个数
+		int[] counts=new int[length];
+		int count=0;
+		
+		//自下而上解决递归问题
+		for(int i=length-1;i>=0;--i)
+		{
+			if(i<length-1)
+				count=counts[i+1];
+			else 
+				count=1;
+			if(i<length-1)
+			{
+				int digit1=Integer.valueOf(numberInString.charAt(i)-'0');
+				int digit2=Integer.valueOf(numberInString.charAt(i+1)-'0');
+				int converted=digit1*10+digit2;
+				if(converted>=10 && converted<=25)
+				{
+					if(i<length-2)
+						count+=counts[i+2];
+					else
+						count+=1;
+				}
+			}
+			counts[i]=count;
+		}
+		return counts[0];
+	}
+	public static void main(String[] args)
+	{
+		T46_TranslateNumbersToStrings main = new T46_TranslateNumbersToStrings();
+		//只有一位数字
+		System.out.println(main.GetTranslationCount(1));	//1
+		//包含多位数字
+		System.out.println(main.GetTranslationCount(12258));	//5
+		//负数
+		System.out.println(main.GetTranslationCount(-100));		//0
+		//0
+		System.out.println(main.GetTranslationCount(0));	//1
+
+		//包含25,26的数字
+		System.out.println(main.GetTranslationCount(125));	//3
+		System.out.println(main.GetTranslationCount(126));	//2
+	}
+}
