@@ -1,0 +1,60 @@
+package offer;
+
+public class T48_LongestSubstringWithoutDup {
+	/*最长不含重复字符的子字符串
+	 * 1.第i个字符之前没有出现过f(i)=f(i-1)+1
+	 * 2.第i个字符已经出现过，两次相距d
+	 * 	(1)d<=f(i-1) f(i)=d
+	 * 	(2)d>f(i-1)  f(i)=f(i-1)+1
+	 */
+	public int LongestSubstringWithoutDuplication(char[] str)
+	{
+		if (str==null)
+			return 0;
+		int curLength=0;
+		int maxLength=0;
+		
+		int[] positions=new int[26];
+		for(int i=0;i<26;++i)
+			positions[i]=-1;
+		
+		for(int i=0;i<str.length;++i)
+		{
+			int posBefore=positions[str[i]-'a'];	//确定当前字符上次出现的位置
+			if(posBefore<0 || i-posBefore>curLength)	//确定当前字符结尾的不重复子字符串的最大长度
+				++curLength;
+			else
+				curLength=i-posBefore;
+			
+			positions[Integer.valueOf(str[i]-'a')]=i;	//更新当前字符出现位置
+			
+			if(curLength>maxLength)	//更新最长不重复子字符串长度
+				maxLength=curLength;
+			
+		}
+		return maxLength;		
+	}
+	
+	public static void main(String[] args)
+	{
+		T48_LongestSubstringWithoutDup main= new T48_LongestSubstringWithoutDup();
+		char[] str1= "arabcacfr".toCharArray();
+		System.out.println(main.LongestSubstringWithoutDuplication(str1));	//4
+		
+		char[] str2= "a".toCharArray();
+		System.out.println(main.LongestSubstringWithoutDuplication(str2));	//1
+
+		char[] str3= "abcdefg".toCharArray();
+		System.out.println(main.LongestSubstringWithoutDuplication(str3));	//7
+		
+
+		char[] str4= "aaaa".toCharArray();
+		System.out.println(main.LongestSubstringWithoutDuplication(str4));	//1
+		
+		char[] str5= "".toCharArray();
+		System.out.println(main.LongestSubstringWithoutDuplication(str5));	//0
+		
+		System.out.println(main.LongestSubstringWithoutDuplication(null));	//0
+	}
+
+}
