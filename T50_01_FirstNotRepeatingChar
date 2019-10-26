@@ -1,0 +1,46 @@
+package offer;
+import java.util.*;
+public class T50_01_FirstNotRepeatingChar {
+	//字符串中第一个只出现一次的字符
+	public char FirstNotRepeatingChar(char[] str)
+	{
+		if(str==null)
+			return ' ';
+		Map<Character,Integer> map=new HashMap<Character,Integer>();
+		
+		for(int i=0;i<str.length;++i)
+		{
+			if(map.containsKey(str[i]))
+			{
+				int time=map.get(str[i]);
+				map.put(str[i],++time);
+			}
+			else
+				map.put(str[i], 1);			
+		}
+		
+		for(int i=0;i<str.length;++i)
+		{
+			if(map.get(str[i])==1)
+				return str[i];
+		}
+		
+		return ' ';
+	}
+	
+	public static void main(String[] args)
+	{
+		T50_01_FirstNotRepeatingChar main = new T50_01_FirstNotRepeatingChar();
+		//存在只出现一次的字符
+		char[] str1="google".toCharArray();
+		System.out.println(main.FirstNotRepeatingChar(str1));
+		//不存在只出现一次的字符
+		char[] str2="aabccdbd".toCharArray();
+		System.out.println(main.FirstNotRepeatingChar(str2));
+		//所有字符只出现一次
+		char[] str3="a".toCharArray();
+		System.out.println(main.FirstNotRepeatingChar(str3));
+		//空指针
+		System.out.println(main.FirstNotRepeatingChar(null));
+	}
+}
