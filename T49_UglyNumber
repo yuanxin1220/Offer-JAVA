@@ -1,0 +1,77 @@
+package offer;
+
+public class T49_UglyNumber {
+	//====================逐个判断每个整数是不是丑数====================
+	public boolean IsUgly(int number)
+	{
+		while(number%2==0)
+			number/=2;
+		while(number%3==0)
+			number/=3;
+		while(number%5==0)
+			number/=5;
+		if(number==1)
+			return true;
+		else
+			return false;
+	}
+	public int GetUglyNumber_Solution1(int index)
+	{
+		if(index<=0)
+			return 0;
+		
+		int number=0;
+		int uglyFound=0;
+		while(uglyFound<index)
+		{
+			number++;
+			if(IsUgly(number))
+				uglyFound++;
+		}
+		return number;
+	}
+	
+	//====================创建数组保存已找到的丑数====================
+	public int GetUglyNumber_Solution2(int index)
+	{
+		if(index<=0)
+			return 0;
+		
+		int[] pUglyNumbers=new int[index];
+		pUglyNumbers[0]=1;
+		int nextUglyIndex=1;
+		
+		int T2=0;
+		int T3=0;
+		int T5=0;
+		
+		while(nextUglyIndex<index)
+		{
+			pUglyNumbers[nextUglyIndex]=Math.min(pUglyNumbers[T2]*2, Math.min(pUglyNumbers[T3]*3,pUglyNumbers[T5]*5));
+			if(pUglyNumbers[T2]*2<=pUglyNumbers[nextUglyIndex])
+				T2++;
+			if(pUglyNumbers[T3]*3<=pUglyNumbers[nextUglyIndex])
+				T3++;
+			if(pUglyNumbers[T5]*5<=pUglyNumbers[nextUglyIndex])
+				T5++;
+			nextUglyIndex++;
+		}
+		return pUglyNumbers[nextUglyIndex-1];
+	}
+	
+	public static void main(String[] args)
+	{
+		//功能测试
+		T49_UglyNumber main=new T49_UglyNumber();
+		System.out.println(main.GetUglyNumber_Solution2(2));
+		System.out.println(main.GetUglyNumber_Solution2(3));
+		System.out.println(main.GetUglyNumber_Solution2(4));
+		System.out.println(main.GetUglyNumber_Solution2(5));
+		System.out.println(main.GetUglyNumber_Solution2(6));
+		//特殊输入测试，边界输入
+		System.out.println(main.GetUglyNumber_Solution2(0));
+		System.out.println(main.GetUglyNumber_Solution2(1));
+		//输入较大数
+		System.out.println(main.GetUglyNumber_Solution2(1500));
+	}
+}
