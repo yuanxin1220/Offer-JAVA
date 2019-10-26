@@ -1,0 +1,181 @@
+package offer;
+//数组中出现次数超过一半的数字
+public class T39_MoreThanHalfNumber {
+	//====================数组处理的辅助函数====================
+	//数组数字交换
+	public void swap(int[] numbers,int i,int j)
+	{
+		if (numbers==null)
+			return;
+		int tmp=numbers[i];
+		numbers[i]=numbers[j];
+		numbers[j]=tmp;				
+	}
+	//一次划分
+	public int partition(int[] numbers,int left,int right)
+	{
+		int pivotKey=numbers[left];
+		int pivotPointer=left;
+		
+		while(left<right)
+		{
+			while(left<right && numbers[right]>=pivotKey)
+				right--;
+			while(left<right && numbers[left]<=pivotKey)
+				left++;
+			swap(numbers,left,right);	//把大的交换到右边，小的交换到左边
+		}
+		swap(numbers,pivotPointer,left);	//把pivot交换到中间，即其在数组中排序的位置
+		return left;
+	}
+	
+	//====================输入的有效性检测====================
+	boolean g_bInputInvalid=false;	//定义全局变量表示输入的有效性
+	public boolean CheckInvalidArray(int[] numbers) //判断输入的有效性
+	{
+		g_bInputInvalid=false;
+		if(numbers==null ||numbers.length<=0)
+			g_bInputInvalid=true;
+		return g_bInputInvalid;
+	}
+	public boolean CheckMoreThanHalf(int[] numbers,int number)
+	{
+		int times=0;
+		for(int i=0;i<numbers.length;i++)
+		{
+			if(numbers[i]==number)
+				times++;
+		}
+		boolean isMoreThanHalf=true;	//数组中有一个数字出现次数超过数组长度一般
+		if(times*2<=numbers.length)
+		{
+			g_bInputInvalid=true;
+			isMoreThanHalf=false;
+		}
+		return isMoreThanHalf;
+	}
+	
+	//====================解法一：基于partition函数的时间复杂度为O(n)的算法====================
+	public int MoreThanHalfNum_Solution1(int[] numbers)
+	{
+		if(CheckInvalidArray(numbers))
+			return 0;
+		
+		int middle=numbers.length>>1;
+		int start=0;
+		int end=numbers.length-1;
+		int index=partition(numbers,start,end);	//随机选择一个数字，调整数字到其下标
+
+		while(index!=middle)	//若下标是中位数
+		{
+			if(index>middle)	//下标大于middle，中位数在左边
+			{
+				end=index-1;
+				index=partition(numbers,start,end);
+			}
+			else	//下标小于middle，中位数在右边
+			{
+				start=index+1;
+				index=partition(numbers,start,end);
+			}
+
+		}
+		int result=numbers[index];
+		if(!CheckMoreThanHalf(numbers,result))
+			return 0;
+		return result;
+	}	
+	
+	public int MoreThanHalfNum_Solution2(int[] numbers)
+	{
+		if(CheckInvalidArray(numbers))
+			return 0;
+		
+		/*遍历数组时保存两个值：数组中的一个数字result和次数times
+		 * 1.下一数字和result相同，times加一
+		 * 2.下一数字和result不同，times减一
+		 * 3.times==0，保存下一数字，times设为1
+		 */
+		int result=numbers[0];
+		int times=1;
+		for(int i=1;i<numbers.length;++i)
+		{
+			if(numbers[i]==result)
+				times++;
+			else
+				times--;
+			if(times==0)
+			{
+				result=numbers[i];
+				times=1;
+			}
+		}
+		if(!CheckMoreThanHalf(numbers,result))
+			return 0;
+		return result;
+	}
+	
+	//====================测试代码====================
+	public void Test(String testName,int[] numbers,int expectedValue,boolean expectedFlag)
+	{
+		if(testName!=null)
+			System.out.println(testName);
+		
+		int[] copy;
+		if(numbers!=null)
+		{			
+			copy=new int[numbers.length];
+			for(int i=0;i<numbers.length;++i)
+				copy[i]=numbers[i];
+		}
+		else
+			copy=null;
+
+		System.out.print("Test for solution1: ");
+		int result=MoreThanHalfNum_Solution1(numbers);
+		if(result==expectedValue && g_bInputInvalid==expectedFlag)
+			System.out.println("passed.");
+		else 
+			System.out.println("failed.");
+		
+		g_bInputInvalid=false;
+		System.out.print("Test for solution2: ");
+		int result2=MoreThanHalfNum_Solution1(copy);
+		if(result2==expectedValue && g_bInputInvalid==expectedFlag)
+			System.out.println("passed.");
+		else 
+			System.out.println("failed.");
+		
+	}
+	//存在出现次数超过数组长度一半的数字
+	public void Test1()
+	{
+		int[] numbers= {1, 2, 3, 2, 2, 2, 5, 4, 2};
+		Test("Test1",numbers,2,false);
+	}
+	//不存在出现次数超过数组长度一半的数字
+	public void Test2()
+	{
+		int[] numbers= {1, 2, 3, 2, 4, 2, 5, 2, 3};
+		Test("Test2",numbers,0,true);
+	}
+	//输入数组中只有一个数字
+	public void Test3()
+	{
+		int[] numbers= {1};
+		Test("Test3",numbers,1,false);
+	}
+	//输入空指针
+	public void Test4()
+	{
+		Test("Test4",null,0,true);
+	}
+	public static void main(String[] args)
+	{
+		T39_MoreThanHalfNumber main= new T39_MoreThanHalfNumber();
+		main.Test1();
+		main.Test2();
+		main.Test3();
+		main.Test4();
+	}
+}
