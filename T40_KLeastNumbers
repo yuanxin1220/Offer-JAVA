@@ -1,0 +1,110 @@
+package offer;
+import java.util.*;
+//最小的K个数
+public class T40_KLeastNumbers {
+	//====================数组处理的辅助函数====================
+	//数组数字交换
+	public void swap(int[] numbers,int i,int j)
+	{
+		if (numbers==null)
+			return;
+		int tmp=numbers[i];
+		numbers[i]=numbers[j];
+		numbers[j]=tmp;
+	}
+	public int partition(int[] numbers,int left,int right)
+	{
+		int pivotKey=numbers[left];
+		int pivotIndex=left;
+		
+		while(left<right)
+		{
+			while(left<right && numbers[right]>=pivotKey)
+				right--;
+			while(left<right && numbers[left]<=pivotKey)
+				left++;
+			swap(numbers,left,right);	//把大的交换到右边，小的交换到左边
+		}
+		swap(numbers,pivotIndex,left);	//把pivot交换到之间，即其在数组中排序的位置
+		return left;
+	}
+
+	//====================O(n)的算法，输入数组会被修改====================
+	//找到数组中第k个数字，左边的即最小的k个数字
+	public ArrayList<Integer> GetLeastNumbers_Solution1(int[] input,int k)
+	{
+		ArrayList<Integer> output=new ArrayList<Integer>();
+		if(input==null || k<=0 || input.length<k)					
+			return output;
+		
+		int start=0;
+		int end=input.length-1;
+		int index=partition(input,start,end);	//随机选择一个数字，调整数字到其下标
+		while(index!=k-1)	//若是第K个数部进入循环
+		{
+			if(index>k-1)	//若下标大于k，第k个数在左边
+			{
+				end=index-1;
+				index=partition(input,start,end);
+			}
+			if(index<k-1)	//若下标小于k，第k个数在右边
+			{
+				start=index+1;
+				index=partition(input,start,end);
+			}
+		}
+		for(int i=0;i<k;++i)
+			output.add(input[i]);
+		
+		return output;
+	}
+
+	//====================O(nlogk)的算法，适合海量处理数据====================
+	public ArrayList<Integer> GetLeastNumbers_Solution2(int[] input,int k)
+	{
+		ArrayList<Integer> output=new ArrayList<Integer>();
+		if(input==null||k<=0||k>input.length)
+			return output;
+		TreeSet<Integer> kSet=new TreeSet<Integer>();
+		//找到k个数字中的最大数，删除最大数，插入新数字
+		for(int i=0;i<input.length;++i)
+		{
+			if(kSet.size()<k)
+				kSet.add(input[i]);
+			else if(input[i]<kSet.last())
+			{
+				kSet.remove(kSet.last());
+				kSet.add(input[i]);
+			}
+		}
+		Iterator<Integer> iterator=kSet.iterator();
+		while(iterator.hasNext())
+			output.add(iterator.next());
+		return output;
+	}
+	
+	//====================测试代码====================
+	public void Test(String testName,int[] input,int k)
+	{
+		if(testName!=null)
+			System.out.println(testName);
+		
+		System.out.println("Result for solution2: ");
+		ArrayList<Integer> result_solution2=GetLeastNumbers_Solution2(input,k);
+		System.out.println(result_solution2.toString());
+		
+
+		System.out.println("Result for solution1: ");
+		ArrayList<Integer> result_solution1=GetLeastNumbers_Solution1(input,k);
+		System.out.println(result_solution1.toString());
+	}
+	
+	public static void main(String[] args)
+	{
+		int[] input={73, 22, 93, 43, 55, 14, 28, 65, 39, 81, 33, 100};
+		T40_KLeastNumbers main=new T40_KLeastNumbers();
+		main.Test("Test1",input,8);
+		main.Test("Test2",input,20);
+		main.Test("Test3",null,1);
+	}
+}
