@@ -1,0 +1,73 @@
+package offer;
+class CharStatistics
+{
+	public void CharStatistics() {
+		index=0;
+		occurence=new int[256];
+		for(int i=0;i<256;++i)
+			occurence[i]=-1;
+	}
+	
+	//O(1)时间内插入或更新一个字符出现次数
+	public void Insert(char ch)
+	{
+		if(occurence[Integer.valueOf(ch)]==-1)
+			occurence[Integer.valueOf(ch)]=0;
+		else if(occurence[Integer.valueOf(ch)]==0)
+			occurence[Integer.valueOf(ch)]=-2;
+		index++;
+	}
+	
+	//字符流中第一个只出现一次的字符
+	public char FirstAppearingOnce()
+	{
+		int minIndex=Integer.MAX_VALUE;	//最大的integer
+		char ch='#';
+		for(int i=0;i<256;++i)
+		{
+			if(occurence[i]>=0 && occurence[i]<minIndex)
+			{
+				ch=(char)i;
+				minIndex=occurence[i];
+			}
+		}
+		return ch;
+	}
+	
+	private int[] occurence;//未出现(-1)，出现多次(-2)，出现1次(0)
+	private int index;
+}
+
+public class T50_02_FirstCharacterInStream {
+	public static void main(String[] args)
+	{
+		CharStatistics main=new CharStatistics();
+		main.CharStatistics();
+		
+		//读入0个字符
+		System.out.println(main.FirstAppearingOnce());
+		
+		//读入一个字符
+		main.Insert('g');
+		System.out.println(main.FirstAppearingOnce());
+		
+		//读入多个字符，读入所有字符都是唯一的
+		main.Insert('o');
+		System.out.println(main.FirstAppearingOnce());
+
+		main.Insert('o');
+		System.out.println(main.FirstAppearingOnce());
+
+		//读入多个字符，读入所有字符都是重复出现的
+		main.Insert('g');
+		System.out.println(main.FirstAppearingOnce());
+		
+		//读入多个字符
+		main.Insert('l');
+		System.out.println(main.FirstAppearingOnce());
+
+		//读入多个字符
+		main.Insert('e');
+		System.out.println(main.FirstAppearingOnce());
+	}
+}
