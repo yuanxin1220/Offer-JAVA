@@ -1,0 +1,51 @@
+package offer;
+import java.util.Arrays;
+import java.util.*;
+public class T45_SortArrayForMinNumber {
+	public String printMinNumber(int[] numbers)
+	{
+		if(numbers==null||numbers.length==0)	//判断输入的合法性
+			return "";
+		
+		//数组转换成字符串
+		int len=numbers.length;
+		String[] str=new String[len];
+		StringBuilder sb=new StringBuilder();
+		for(int i=0;i<len;i++)
+			str[i]=String.valueOf(numbers[i]);
+		
+		//这里根据自己定义的排序规则：mn>nm则m大于n
+		Arrays.sort(str, new Comparator<String>() {
+			public int compare(String str1,String str2)
+			{
+				String c1=str1+str2;
+				String c2=str2+str1;
+				return c1.compareTo(c2);
+			}
+		});
+		
+		//字符数组转字符串
+		for(int i=0;i<len;i++)
+			sb.append(str[i]);
+		return sb.toString();
+	}
+	
+	public static void main(String[] args)
+	{
+		T45_SortArrayForMinNumber main=new T45_SortArrayForMinNumber();
+		//输入数组有多个数字
+		int[] numbers1= {3,32,321};
+		System.out.println(main.printMinNumber(numbers1));
+		
+		//输入数组中有重复的数位
+		int[] numbers2= {1,11,1};
+		System.out.println(main.printMinNumber(numbers2));
+		
+		//输入数组只有一个数字
+		int[] numbers3= {321};
+		System.out.println(main.printMinNumber(numbers3));
+		
+		//输入空指针
+		System.out.println(main.printMinNumber(null));
+	}
+}
