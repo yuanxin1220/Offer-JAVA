@@ -1,0 +1,87 @@
+package offer;
+
+public class T42_GreatestSumOfSubarrays {
+	boolean g_bInputInvalid=false;
+	public int FindGreatestSumOfArray_Iterasion(int[] pData,int nLength)
+	{
+		if(pData==null || nLength<=0)
+		{
+			g_bInputInvalid=true;
+			return 0;
+		}
+		
+		g_bInputInvalid=false;
+		
+		int nCurSum=0;	//累加的子数组的和
+		int nGreatestSum=Integer.MIN_VALUE;	//最大的子数组和
+		for(int i=0;i<nLength;++i)
+		{
+			nCurSum=(nCurSum<=0)?pData[i]:nCurSum+pData[i];
+			nGreatestSum=(nCurSum>nGreatestSum)?nCurSum:nGreatestSum;
+		}
+		return nGreatestSum;
+	}
+	
+	public int FindGreatestSumOfArray_Recursion(int[] pData,int nLength)
+	{
+		if(pData==null || nLength<=0)	//判断输入的有效性
+		{
+			g_bInputInvalid=true;
+			return 0;
+		}
+		
+		g_bInputInvalid=false;
+		int[] result_f=new int[nLength];	//第i个数字结尾的子数组的最大和
+		result_f[0]=pData[0];
+		for (int i=1;i<nLength;++i)
+			result_f[i]=(result_f[i-1]>0)?result_f[i-1]+pData[i]:pData[i];
+			
+		int max=Integer.MIN_VALUE;
+		for(int i=0;i<nLength;++i)	//连续子数组的最大和
+			max=Math.max(result_f[i],max);
+		return max;
+	}
+	
+	// ====================测试代码====================
+	public void Test(String testName,int[] pData,int nLength,int expected,boolean expectedFlag)
+	{
+		if(testName!=null)
+			System.out.print(testName);
+		int result=FindGreatestSumOfArray_Recursion(pData,nLength);
+		if(result==expected && expectedFlag==g_bInputInvalid)
+			System.out.println(" passed.");
+		else
+			System.out.println(" failed.");
+	}
+	//输入数组有正有负
+	public void Test1()
+	{
+		int[] data= {1, -2, 3, 10, -4, 7, 2, -5};
+		Test("Test1",data,8,18,false);
+	}
+	//输入全负数
+	public void Test2()
+	{
+		int[] data= {-2, -8, -1, -5, -9};
+		Test("Test2",data,5,-1,false);
+	}
+	//输入全正数
+	public void Test3()
+	{
+		int[] data={2, 8, 1, 5, 9};
+		Test("Test3",data,5,25,false);
+	}
+	//空指针
+	public void Test4()
+	{
+		Test("Test4",null,0,0,true);
+	}
+	public static void main(String[] args)
+	{
+		T42_GreatestSumOfSubarrays main=new T42_GreatestSumOfSubarrays();
+		main.Test1();
+		main.Test2();
+		main.Test3();
+		main.Test4();
+	}
+}
