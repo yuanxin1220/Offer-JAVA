@@ -1,0 +1,86 @@
+package offer;
+//从1到n整数中1出现的次数
+public class T43_NumberOf1 {
+	//====================方法一====================
+	public int NumberOf1Between1AndN_Solution1(int n)
+	{
+		int number=0;
+		for(int i=1;i<=n;++i)
+			number+=NumberOf1(i);
+		return number;
+	}
+	public int NumberOf1(int n)
+	{
+		int number=0;
+		while(n!=0)
+		{
+			if(n%10==1)
+				number++;
+			n/=10;
+		}
+		return number;
+	}
+
+	//====================方法二====================
+	/* 1.取第i位左边的数字（高位），乘以10^(i-1)，得到基础值a
+	 * 2.取第i位数字，计算修正值：
+	 * (1)若大于1，则结果为a+10^(i-1)
+	 * (2)若小于1，则结果为a
+	 * (3)若等于1，则取第i位右边数字，设为b，最后结果为a+b+1
+	 */
+	public int NumberOf1Between1AndN_Solution2(int n,int x)
+	{
+		if(n<0 || x<1 || x>9)
+			return 0;
+		int curr,low,temp,high=n,i=1,total=0;
+		while(high!=0)
+		{
+			high=n/(int)Math.pow(10, i);	//	获取第i位的高位
+			temp=n%(int)Math.pow(10, i);
+			curr=temp/(int)Math.pow(10, i-1);	//	获取第i位
+			low=temp%(int)Math.pow(10, i-1);	//	获取第i位的低位
+			if(curr==x)	//	等于x
+				total+=high*(int)Math.pow(10,i-1)+low+1;
+			else if(curr<x)	//	小于x
+				total+=high*(int)Math.pow(10, i-1);
+			else	//	大于x
+				total+=high*(int)Math.pow(10, i-1)+(int)Math.pow(10, i-1);
+			i++;
+		}
+		return total;
+	}
+	
+	public void Test(String testName,int n,int expected)
+	{
+		if(testName!=null)
+			System.out.println(testName+" ");
+		
+		if(NumberOf1Between1AndN_Solution1(n)==expected)
+			System.out.println("Solution1 passed");
+		else
+			System.out.println("Solution1 failed");
+		
+		if(NumberOf1Between1AndN_Solution2(n,1)==expected)
+			System.out.println("Solution2 passed");
+		else
+			System.out.println("Solution2 failed");
+		System.out.println();
+	}
+
+	public static void main(String[] args)
+	{
+		T43_NumberOf1 main=new T43_NumberOf1();
+		//边界测试
+		main.Test("Test8", 0, 0);
+		main.Test("Test1", 1, 1);
+		main.Test("Test2", 5, 1);
+		//功能测试
+		main.Test("Test3", 10, 2);
+		main.Test("Test4", 55, 16);
+		main.Test("Test5", 99, 20);
+		//性能测试
+		main.Test("Test6", 10000, 4001);
+		main.Test("Test7", 21345, 18821);
+	}
+}
+
