@@ -1,0 +1,105 @@
+package offer;
+
+public class T53_01_NumberOfK {
+	//数字在排序数组中出现次数（二分法）
+	/* 第一次k出现位置
+	 * 数组中间数字middle与k比较
+	 * 1.middle>k，前半段
+	 * 2.middle<k，后半段
+	 * 3.middle=k
+	 * 	(1)data[middleIndex-1]=k 前半段
+	 * 	(2)data[middleIndex-1]!=k 返回middleIndex
+	 */
+	public int GetFirstK(int[] data,int length,int k,int start,int end)
+	{
+		if(start>end)
+			return -1;
+		
+		int middleIndex=(start+end)/2;
+		int middleData=data[middleIndex];
+		
+		if(middleData==k)
+		{
+			if((middleIndex==0)||((middleIndex>0)&&(data[middleIndex-1]!=k)))
+				return middleIndex;
+			else
+				end=middleIndex-1;
+		}
+		else if(middleData>k)
+			end=middleIndex-1;
+		else
+			start=middleIndex+1;
+		return GetFirstK(data,length,k,start,end);
+	}
+	
+	/* 最后一次k出现位置
+	 * 数组中间数字middle与k比较
+	 * 1.middle>k，前半段
+	 * 2.middle<k，后半段
+	 * 3.middle=k
+	 * 	(1)data[middleIndex+1]=k 后半段
+	 * 	(2)data[middleIndex+1]!=k 返回middleIndex
+	 */
+	public int GetLastK(int[] data,int length,int k,int start,int end)
+	{
+		if(start>end)
+			return -1;
+		
+		int middleIndex=(start+end)/2;
+		int middleData=data[middleIndex];
+		
+		if(middleData==k)
+		{
+			if((middleIndex==length-1)||((middleIndex<length-1)&&(data[middleIndex+1]!=k)))
+				return middleIndex;
+			else
+				start=middleIndex+1;			
+		}
+		else if(middleData<k)
+			start=middleIndex+1;
+		else
+			end=middleIndex-1;
+		return GetLastK(data,length,k,start,end);
+	}
+	
+	public int GetNumberOfK(int[] data,int k)
+	{
+		int number=0;
+		if(data!=null && data.length>0)
+		{
+			int length=data.length;
+			int first=GetFirstK(data,length,k,0,length-1);
+			int last=GetLastK(data,length,k,0,length-1);
+			if(last>-1 && first>-1)
+				number=last-first+1;
+		}
+		return number;		
+	}
+	
+	public static void main(String[] args)
+	{
+		T53_01_NumberOfK main=new T53_01_NumberOfK();
+		//============功能测试=============
+		//查找数字在数组出现多次
+		//int[] data1= {1, 2, 3, 3, 3, 3, 4, 5};
+		//System.out.println(main.GetNumberOfK(data1, 3));
+		//查找数字在数组出现1次
+		//int[] data2= {1, 2, 3, 3, 3, 3, 4, 5};
+		//System.out.println(main.GetNumberOfK(data2, 4));
+		//查找数字在数组没有出现
+		int[] data3= {1, 2, 3, 3, 3, 3, 4, 5};
+		System.out.println(main.GetNumberOfK(data3, 6));
+		//============边界测试=============
+		//查找最大值
+		//int[] data4= {1, 2, 3, 3, 3, 3, 4, 5};
+		//System.out.println(main.GetNumberOfK(data4, 1));
+		//查找最小值
+		//int[] data5= {1, 2, 3, 3, 3, 3, 4, 5};
+		//System.out.println(main.GetNumberOfK(data5, 5));
+		//数组仅一个数字
+		//int[] data6= {1};
+		//System.out.println(main.GetNumberOfK(data6, 1));
+		//空指针
+		//System.out.println(main.GetNumberOfK(null, 0));
+	}
+}
