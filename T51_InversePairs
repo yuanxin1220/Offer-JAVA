@@ -1,0 +1,98 @@
+package offer;
+
+public class T51_InversePairs {
+	public int InversePairs(int[] data,int length)
+	{
+		if(data==null||length<0)
+			return 0;
+		
+		int[] copy=new int[length];
+		for(int i=0;i<length;++i)
+			copy[i]=data[i];
+		
+		int count=InversePairsCore(data,copy,0,length-1);
+		return count;
+	}
+	
+	/*数组中的逆序对
+	 * 1.把数组分割成子数组，统计子数组内部逆序对的数目
+	 * 2.统计两个相邻子数组之间逆序对的数目
+	 * 	 两个指针指向两个子数组末尾P1P2
+	 * 	(1)P1>P2 逆序对数目等于子数组二剩余数字个数
+	 * 	(2)P1<=P2 不构成逆序对
+	 * 	较大数字从复制到辅助数组
+	 * 	对应指针向前一位
+	 */
+	public int InversePairsCore(int[] data,int[] copy,int start,int end)
+	{
+		if(start==end)
+		{
+			copy[start]=data[start];
+			return 0;
+		}
+		
+		//把数组分割成子数组，统计子数组内部逆序对的数目
+		int length=(end-start)/2;
+		int left=InversePairsCore(copy,data,start,start+length);
+		int right=InversePairsCore(copy,data,start+length+1,end);
+		
+		//统计两个相邻子数组之间逆序对的数目
+		//两个指针指向两个子数组末尾P1P2
+		int i=start+length;
+		int j=end;
+		int indexCopy=end;
+		int count=0;
+		while(i>=start && j>=start+length+1)
+		{
+			if(data[i]>data[j])
+			{
+				count+=j-(start+length);
+				copy[indexCopy--]=data[i--];
+			}
+			else
+				copy[indexCopy--]=data[j--];
+		}
+		
+		for(;i>=start;)
+			copy[indexCopy--]=data[i--];
+		for(;j>=start+length+1;)
+			copy[indexCopy--]=data[j--];
+		
+		return left+right+count;
+	}
+	
+	public static void main(String[] args)
+	{
+		T51_InversePairs main=new T51_InversePairs();
+		//=================功能测试===================
+		//未排序数组 3
+		//int[] data1 = { 1, 2, 3, 4, 7, 6, 5 };
+		//System.out.println(main.InversePairs(data1, data1.length));
+		
+		//递增数组	0
+		//int[] data2 = { 1, 2, 3, 4, 5, 6 };
+		//System.out.println(main.InversePairs(data2, data2.length));
+		
+		//递减数组 15
+		//int[] data3 = { 6, 5, 4, 3, 2, 1 };
+		//System.out.println(main.InversePairs(data3, data3.length));
+		
+		//输入数组有重复	3
+		int[] data4 = { 1, 2, 1, 2, 1 };
+		System.out.println(main.InversePairs(data4, data4.length));
+		
+		//=================边界测试===================
+		//输入仅两个数字	0
+		//int[] data5 = { 1, 2 };
+		//System.out.println(main.InversePairs(data5, data5.length));
+		
+		//输入仅一个数字	0
+		//int[] data6 = { 1 };
+		//System.out.println(main.InversePairs(data6, data6.length));
+		
+		//=================特殊输入测试===================
+		//输入空指针
+		//System.out.println(main.InversePairs(null,0));
+	}
+	
+}
