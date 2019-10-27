@@ -1,0 +1,163 @@
+package offer;
+//两个链表的第一个公共节点
+class ListNode
+{
+	int m_nKey;
+	ListNode m_pNext;
+	ListNode(int val)
+	{
+		this.m_nKey=val;
+		this.m_pNext=null;
+	}
+	public void ConnectNodes(ListNode pNext)
+	{
+		this.m_pNext=pNext;
+	}
+}
+public class T52_FirstCommonNodesInLists {
+	public ListNode FindFirstCommonNode(ListNode pHead1,ListNode pHead2)
+	{
+		//得到两个链表的长度
+		int nLength1=GetLength(pHead1);
+		int nLength2=GetLength(pHead2);		
+		ListNode pNodeLong=pHead1;
+		ListNode pNodeShort=pHead2;
+		//在长链表上先走几步，再同时在两个链表上遍历
+		if(nLength1<nLength2)
+		{
+			pNodeLong=pHead2;
+			pNodeShort=pHead1;
+		}
+		int difLength=Math.abs(nLength2-nLength1);
+		for(int i=1;i<=difLength;i++)
+			pNodeLong=pNodeLong.m_pNext;
+		while((pNodeLong!=null) && (pNodeShort!=null) && (pNodeLong!=pNodeShort))
+		{
+			pNodeLong=pNodeLong.m_pNext;
+			pNodeShort=pNodeShort.m_pNext;
+		}		
+		//得到第一个公共节点
+		return pNodeLong;
+	}
+	public int GetLength(ListNode pHead)
+	{
+		ListNode pNode=pHead;
+		int nLength=0;
+		while(pNode!=null)
+		{
+			nLength++;
+			pNode=pNode.m_pNext;
+		}
+		return nLength;
+	}
+	
+	//公共节点在链表中间
+	public void Test1()
+	{
+
+		ListNode pNode1=new ListNode(1);
+		ListNode pNode2=new ListNode(2);
+		ListNode pNode3=new ListNode(3);
+		ListNode pNode4=new ListNode(4);
+		ListNode pNode5=new ListNode(5);
+		ListNode pNode6=new ListNode(6);
+		ListNode pNode7=new ListNode(7);
+		
+		pNode1.ConnectNodes(pNode2);
+		pNode2.ConnectNodes(pNode3);
+		pNode3.ConnectNodes(pNode6);
+		pNode6.ConnectNodes(pNode7);
+		
+		pNode4.ConnectNodes(pNode5);
+		pNode5.ConnectNodes(pNode6);
+		ListNode result=FindFirstCommonNode(pNode1, pNode4);
+		System.out.println(result.m_nKey);
+	}
+
+	//公共节点在链表末尾
+	public void Test2()
+	{
+
+		ListNode pNode1=new ListNode(1);
+		ListNode pNode2=new ListNode(2);
+		ListNode pNode3=new ListNode(3);
+		ListNode pNode4=new ListNode(4);
+		ListNode pNode5=new ListNode(5);
+		ListNode pNode6=new ListNode(6);
+		ListNode pNode7=new ListNode(7);
+		
+		pNode1.ConnectNodes(pNode2);
+		pNode2.ConnectNodes(pNode3);
+		pNode3.ConnectNodes(pNode4);
+		pNode4.ConnectNodes(pNode7);
+		
+		pNode5.ConnectNodes(pNode6);
+		pNode6.ConnectNodes(pNode7);
+		ListNode result=FindFirstCommonNode(pNode1, pNode5);
+		System.out.println(result.m_nKey);
+	}
+	
+	//第一个公共节点是链表头节点
+	public void Test3()
+	{
+
+		ListNode pNode1=new ListNode(1);
+		ListNode pNode2=new ListNode(2);
+		ListNode pNode3=new ListNode(3);
+		ListNode pNode4=new ListNode(4);
+		ListNode pNode5=new ListNode(5);
+		
+		pNode1.ConnectNodes(pNode2);
+		pNode2.ConnectNodes(pNode3);
+		pNode3.ConnectNodes(pNode4);
+		pNode4.ConnectNodes(pNode5);
+		
+		ListNode result=FindFirstCommonNode(pNode1, pNode1);
+		System.out.println(result.m_nKey);
+	}
+	
+	//没有公共节点
+	public void Test4()
+	{
+
+		ListNode pNode1=new ListNode(1);
+		ListNode pNode2=new ListNode(2);
+		ListNode pNode3=new ListNode(3);
+		ListNode pNode4=new ListNode(4);
+		ListNode pNode5=new ListNode(5);
+		ListNode pNode6=new ListNode(6);
+		ListNode pNode7=new ListNode(7);
+		
+		pNode1.ConnectNodes(pNode2);
+		pNode2.ConnectNodes(pNode3);
+		pNode3.ConnectNodes(pNode4);
+		
+		pNode5.ConnectNodes(pNode6);
+		pNode6.ConnectNodes(pNode7);
+		ListNode result=FindFirstCommonNode(pNode1, pNode5);
+		if(result!=null)
+			System.out.println(result.m_nKey);
+		else
+			System.out.println(result);
+	}
+	
+	//空指针
+	public void Test5()
+	{
+		ListNode result=FindFirstCommonNode(null, null);
+		if(result!=null)
+			System.out.println(result.m_nKey);
+		else
+			System.out.println(result);
+	}
+	
+	public static void main(String[] args)
+	{
+		T52_FirstCommonNodesInLists main = new T52_FirstCommonNodesInLists();
+		main.Test1();//6
+		main.Test2();//7
+		main.Test3();//1
+		main.Test4();//null
+		main.Test5();//null
+	}
+}
