@@ -1,0 +1,90 @@
+package offer;
+
+public class T56_01_NumbersAppearOnce {
+	public void FindNumsAppearOnce(int[] data,int length,Object num1,Object num2)
+	{
+		if(data==null || length<2)
+			return;
+		
+		//从头到尾异或数组中每个数组
+		int resultExclusiveOR=0;
+		for(int i=0;i<length;++i)
+		{
+			resultExclusiveOR^=data[i];
+		}
+		
+		//找到第一个为一的位置
+		int indexOf1=FindFirstBits1(resultExclusiveOR);
+		
+		//根据第n位是不是1划分原数组，并进行异或
+		for(int j=0;j<length;++j)
+		{
+			if(IsBit1(data[j],indexOf1))
+				num1.val^=data[j];
+			else
+				num2.val^=data[j];
+		}		
+	}
+	
+	//在整数num的二进制表示中找到最右边是1的位
+	public int FindFirstBits1(int num)
+	{
+		int indexBit=0;
+		while((num&1)==0 &&indexBit<Integer.SIZE)
+		{
+			num=num>>1;
+			indexBit++;
+		}
+		return indexBit;
+	}
+	//num的二进制表示中从后数indexBit位是不是1
+	public boolean IsBit1(int num,int indexBit)
+	{
+		num=num>>indexBit;
+		return ((num&1)==1)?true:false;
+	}
+	
+	// ====================测试代码====================
+	void Test(String testName, int data[], int length, int expected1, int expected2)
+	{
+	    if(testName != null)
+	    	System.out.print(testName);
+
+	    Object result1=new Object();
+	    Object result2=new Object();
+	    FindNumsAppearOnce(data, length, result1, result2);
+
+	    if((expected1 == result1.val && expected2 == result2.val) ||
+	        (expected2 == result1.val && expected1 == result2.val))
+	    	System.out.println("Passed.");
+	    else
+	    	System.out.println("Failed.");
+	}
+	
+	void Test1()
+	{
+	    int data[] = { 2, 4, 3, 6, 3, 2, 5, 5 };
+	    Test("Test1 ", data, data.length, 4, 6);
+	}
+
+	void Test2()
+	{
+	    int data[] = { 4, 6 };
+	    Test("Test2 ", data, data.length, 4, 6);
+	}
+
+	void Test3()
+	{
+	    int data[] = { 4, 6, 1, 1, 1, 1 };
+	    Test("Test3 ", data, data.length, 4, 6);
+	}
+	
+	
+	public static void main(String[] args)
+	{
+		T56_01_NumbersAppearOnce main=new T56_01_NumbersAppearOnce();
+		main.Test1();
+		main.Test2();
+		main.Test3();
+	}
+}
