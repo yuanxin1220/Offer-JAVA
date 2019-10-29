@@ -1,0 +1,165 @@
+package offer;
+class Object
+{
+	int val=0;
+}
+public class T55_02_BalancedBinaryTree {
+	public int TreeDepth(BinaryTreeNode pRoot)
+	{
+		if(pRoot==null)
+			return 0;
+		int nLeft=TreeDepth(pRoot.m_pLeft);
+		int nRight=TreeDepth(pRoot.m_pRight);
+		return(nLeft>nRight)?(nLeft+1):(nRight+1);
+	}
+	public boolean IsBalanced_Solution1(BinaryTreeNode pRoot)
+	{
+		if(pRoot==null)
+			return true;
+		int left=TreeDepth(pRoot.m_pLeft);
+		int right=TreeDepth(pRoot.m_pRight);
+		if(Math.abs(left-right)>1)
+			return false;
+		return IsBalanced_Solution1(pRoot.m_pLeft) 
+				&& IsBalanced_Solution1(pRoot.m_pRight);			
+	}
+	
+	public boolean IsBalanced(BinaryTreeNode pRoot,Object pDepth)
+	{
+		if(pRoot==null)
+		{
+			pDepth.val=0;
+			return true;
+		}
+		Object left=new Object();
+		Object right=new Object();
+		if(IsBalanced(pRoot.m_pLeft,left)
+				&&IsBalanced(pRoot.m_pRight,right))
+		{
+			if(Math.abs(left.val-right.val)<1)
+			{
+				pDepth.val+=1;
+				return true;
+			}
+		}
+		return false;
+	}
+	public boolean IsBalanced_Solution2(BinaryTreeNode pRoot)
+	{
+		Object depth=new Object();
+		depth.val=0;
+		return IsBalanced(pRoot,depth);
+	}
+	
+	// ====================测试代码====================
+	public void Test(String testName, BinaryTreeNode pRoot, boolean expected)
+	{
+	    if(testName != null)
+	        System.out.println(testName+" begins:" );
+
+	    System.out.print("Solution1 ");
+	    if(IsBalanced_Solution1(pRoot) == expected)
+	    	System.out.println("Passed.");
+	    else
+	    	System.out.println("Failed.");
+
+	    System.out.print("Solution2 ");
+	    if(IsBalanced_Solution2(pRoot) == expected)
+	    	System.out.println("Passed.");
+	    else
+	    	System.out.println("Failed.");
+	}
+
+	// 平衡二叉树
+//	             1
+//	         /      \
+//	        2        3
+//	       /\       / \
+//	      4  5     6   7
+	void Test1()
+	{
+	    BinaryTreeNode pNode1 = new BinaryTreeNode(1);
+	    BinaryTreeNode pNode2 = new BinaryTreeNode(2);
+	    BinaryTreeNode pNode3 = new BinaryTreeNode(3);
+	    BinaryTreeNode pNode4 = new BinaryTreeNode(4);
+	    BinaryTreeNode pNode5 = new BinaryTreeNode(5);
+	    BinaryTreeNode pNode6 = new BinaryTreeNode(6);
+	    BinaryTreeNode pNode7 = new BinaryTreeNode(7);
+
+	    pNode1.ConnectTreeNodes (pNode2, pNode3);
+	    pNode2.ConnectTreeNodes (pNode4, pNode5);
+	    pNode3.ConnectTreeNodes( pNode6, pNode7);
+
+	    Test("Test1", pNode1, true);
+	}
+	
+	//    1
+	//   2
+	//  3
+	// 4
+	//5
+	void Test2()
+	{
+		BinaryTreeNode pNode1 = new BinaryTreeNode(1);
+		BinaryTreeNode pNode2 = new BinaryTreeNode(2);
+		BinaryTreeNode pNode3 = new BinaryTreeNode(3);
+		BinaryTreeNode pNode4 = new BinaryTreeNode(4);
+		BinaryTreeNode pNode5 = new BinaryTreeNode(5);
+
+		pNode1.ConnectTreeNodes(pNode2, null);
+		pNode2.ConnectTreeNodes(pNode3, null);
+		pNode3.ConnectTreeNodes(pNode4, null);
+		pNode4.ConnectTreeNodes(pNode5, null);
+
+		Test("Test2", pNode1, false);
+	}
+	
+	// 1
+	//  \
+	//   2
+//	    \
+//	     3
+//	      \
+//	       4
+//	        \
+//	         5
+	void Test3()
+	{
+	    BinaryTreeNode pNode1 = new BinaryTreeNode(1);
+	    BinaryTreeNode pNode2 = new BinaryTreeNode(2);
+	    BinaryTreeNode pNode3 = new BinaryTreeNode(3);
+	    BinaryTreeNode pNode4 = new BinaryTreeNode(4);
+	    BinaryTreeNode pNode5 = new BinaryTreeNode(5);
+
+	    pNode1.ConnectTreeNodes(null, pNode2);
+	    pNode2.ConnectTreeNodes(null, pNode3);
+	    pNode3.ConnectTreeNodes(null, pNode4);
+	    pNode4.ConnectTreeNodes(null, pNode5);
+
+	    Test("Test3", pNode1, false);
+	}
+
+	// 树中只有1个结点
+	void Test4()
+	{
+	    BinaryTreeNode pNode1 = new BinaryTreeNode(1);
+	    Test("Test4", pNode1, true);
+	}
+	
+	// 树中没有结点
+	void Test5()
+	{
+	    Test("Test5", null, true);
+	}
+	
+	public static void main(String[] args)
+	{
+		T55_02_BalancedBinaryTree main=new T55_02_BalancedBinaryTree();
+		main.Test1();
+		main.Test2();
+		main.Test3();
+		main.Test4();
+		main.Test5();
+	}
+	
+}
