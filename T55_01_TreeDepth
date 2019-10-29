@@ -1,0 +1,121 @@
+package offer;
+
+public class T55_01_TreeDepth {
+	public int TreeDepth(BinaryTreeNode pRoot)
+	{
+		if(pRoot==null)
+			return 0;
+		int nLeft=TreeDepth(pRoot.m_pLeft);
+		int nRight=TreeDepth(pRoot.m_pRight);
+		return(nLeft>nRight)?(nLeft+1):(nRight+1);
+	}
+	
+	// ====================测试代码====================
+	void Test(String testName, BinaryTreeNode pRoot, int expected)
+	{
+        System.out.print(testName);
+	    int result = TreeDepth(pRoot);
+	    if(expected == result)
+	        System.out.println(" passed.");
+	    else
+	        System.out.println(" FAILED.");
+	}
+
+//	            1
+//	         /      \
+//	        2        3
+//	       /\         \
+//	      4  5         6
+//	        /
+//	       7
+	void Test1()
+	{
+	    BinaryTreeNode pNode1 = new BinaryTreeNode(1);
+	    BinaryTreeNode pNode2 = new BinaryTreeNode(2);
+	    BinaryTreeNode pNode3 = new BinaryTreeNode(3);
+	    BinaryTreeNode pNode4 = new BinaryTreeNode(4);
+	    BinaryTreeNode pNode5 = new BinaryTreeNode(5);
+	    BinaryTreeNode pNode6 = new BinaryTreeNode(6);
+	    BinaryTreeNode pNode7 = new BinaryTreeNode(7);
+	    
+	    pNode1.ConnectTreeNodes(pNode2, pNode3);
+	    pNode2.ConnectTreeNodes(pNode4, pNode5);
+	    pNode5.ConnectTreeNodes(pNode7, null);
+	    pNode3.ConnectTreeNodes(null, pNode6);
+
+	    Test("Test1", pNode1, 4);
+	}
+
+//	               1
+//	              /
+//	             2
+//	            /
+//	           3
+//	          /
+//	         4
+//	        /
+//	       5
+	void Test2()
+	{
+	    BinaryTreeNode pNode1 = new BinaryTreeNode(1);
+	    BinaryTreeNode pNode2 = new BinaryTreeNode(2);
+	    BinaryTreeNode pNode3 = new BinaryTreeNode(3);
+	    BinaryTreeNode pNode4 = new BinaryTreeNode(4);
+	    BinaryTreeNode pNode5 = new BinaryTreeNode(5);
+
+	    pNode1.ConnectTreeNodes(pNode2, null);
+	    pNode2.ConnectTreeNodes(pNode3, null);
+	    pNode3.ConnectTreeNodes(pNode4, null);
+	    pNode4.ConnectTreeNodes(pNode5, null);
+
+	    Test("Test2", pNode1, 5);
+	}
+
+	// 1
+	//  \
+	//   2
+//	    \
+//	     3
+//	      \
+//	       4
+//	        \
+//	         5
+	void Test3()
+	{
+	    BinaryTreeNode pNode1 = new BinaryTreeNode(1);
+	    BinaryTreeNode pNode2 = new BinaryTreeNode(2);
+	    BinaryTreeNode pNode3 = new BinaryTreeNode(3);
+	    BinaryTreeNode pNode4 = new BinaryTreeNode(4);
+	    BinaryTreeNode pNode5 = new BinaryTreeNode(5);
+
+	    pNode1.ConnectTreeNodes(null, pNode2);
+	    pNode2.ConnectTreeNodes(null, pNode3);
+	    pNode3.ConnectTreeNodes(null, pNode4);
+	    pNode4.ConnectTreeNodes(null, pNode5);
+
+	    Test("Test3", pNode1, 5);
+	}
+
+	// 树中只有1个结点
+	void Test4()
+	{
+	    BinaryTreeNode pNode1 = new BinaryTreeNode(1);
+	    Test("Test4", pNode1, 1);
+	}
+	
+	// 树中没有结点
+	void Test5()
+	{
+	    Test("Test5", null, 0);
+	}
+
+	public static void main(String[] args)
+	{
+		T55_01_TreeDepth main = new T55_01_TreeDepth();
+		main.Test1();
+		main.Test2();
+		main.Test3();
+		main.Test4();
+		main.Test5();
+	}
+}
