@@ -1,0 +1,50 @@
+package offer;
+
+public class T53_02_MissingNumber {
+	/*0-n-1中缺失的数字
+	 * 找出第一个值和下标不等的元素-->二分法
+	 */
+	public int GetMissingNumber(int[] numbers)
+	{
+		if(numbers==null)
+			return -1;
+		
+		int left=0;
+		int right=numbers.length-1;
+		while(left<=right)
+		{
+			int middle=(left+right)>>1;
+			if(numbers[middle]!=middle)
+			{
+				if(middle==0 || numbers[middle-1]==middle-1)
+					return middle;
+				right=middle-1;
+			}
+			else
+				left=middle+1;
+		}
+		
+		if(left==numbers.length)
+			return numbers.length;
+		return -1;			
+	}
+	
+	public static void main(String[] args)
+	{
+		T53_02_MissingNumber main=new T53_02_MissingNumber();
+		//缺失数字位于数组开始，中间，末尾
+		int numbers1[] = { 1, 2, 3, 4, 5 };
+		System.out.println(main.GetMissingNumber(numbers1));
+		int numbers2[] = {  0, 1, 2, 4, 5 };
+		System.out.println(main.GetMissingNumber(numbers2));
+		int numbers3[] = { 0, 1, 2, 3, 4 };
+		System.out.println(main.GetMissingNumber(numbers3));
+		
+		//数组仅一个数字0
+		int numbers4[] = { 0 };
+		System.out.println(main.GetMissingNumber(numbers4));
+		
+		//空指针
+		System.out.println(main.GetMissingNumber(null));
+	}
+}
