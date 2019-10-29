@@ -1,0 +1,79 @@
+package offer;
+
+public class T57_01_TwoNumbersWithSum {
+	public boolean FindNumbersWithSum(int[] data,int length,int sum,Object num1,Object num2)
+	{
+		boolean found=false;
+		if(length<1 || num1==null || num2==null)
+			return false;
+		int forward=length-1;
+		int backward=0;
+		
+		while(forward>backward)
+		{
+			int curSum=data[forward]+data[backward];
+			if(curSum==sum)
+			{
+				found=true;
+				num1.val=data[backward];
+				num2.val=data[forward];
+				break;
+			}
+			else if(curSum<sum)
+				backward++;
+			else 
+				forward--;
+		}
+		return found;
+	}
+	// ====================测试代码====================
+	public void Test(String testName, int data[], int length, int sum, boolean expectedReturn)
+	{
+	    if(testName != null)
+	        System.out.print(testName+" begins: ");
+	    
+	    Object num1=new Object();
+	    Object num2=new Object();
+	    boolean result = FindNumbersWithSum(data, length, sum, num1, num2);
+	    if(result == expectedReturn)
+	    {
+	        if(result)
+	        {
+	            if(num1.val + num2.val == sum)
+	            	System.out.println("Passed.");
+	            else
+	            	System.out.println("FAILED.");
+	        }
+	        else
+	        	System.out.println("Passed.");
+	    }
+	    else
+	    	System.out.println("FAILED.");
+	}
+	// 存在和为s的两个数字
+	public void Test1()
+	{
+	    int data[] = {1, 2, 4, 7, 11, 15};
+	    Test("Test1", data, data.length, 15, true);
+	}
+	// 不存在和为s的两个数字
+	public void Test2()
+	{
+	    int data[] = {1, 2, 4, 7, 11, 16};
+	    Test("Test2", data, data.length, 10, false);
+	}
+	// 鲁棒性测试
+	void Test3()
+	{
+	    Test("Test3", null, 0, 0, false);
+	}
+	
+	public static void main(String[] args)
+	{
+		T57_01_TwoNumbersWithSum main=new T57_01_TwoNumbersWithSum();
+
+		main.Test1();
+		main.Test2();
+		main.Test3();
+	}
+}
