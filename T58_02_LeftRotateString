@@ -1,0 +1,65 @@
+package offer;
+
+public class T58_02_LeftRotateString {
+	public void Reverse(char[] data,int begin,int end)
+	{
+		if(data==null)
+			return;
+		while(begin<end)
+		{
+			char tmp=data[begin];
+			data[begin]=data[end];
+			data[end]=tmp;
+			begin++;
+			end--;
+		}
+	}
+	public void LeftRotateString(char[] data,int n)
+	{
+		if(data!=null && n<=data.length)
+		{
+			//翻转字符串前n个字符
+			Reverse(data,0,n-1);
+			//翻转字符串后面部分
+			Reverse(data,n,data.length-1);
+			//翻转整个字符串
+			Reverse(data,0,data.length-1);
+		}
+	}
+	public void Print(char[] data)
+	{
+		if(data!=null)
+		{
+			for(int i=0;i<data.length;i++)
+				System.out.print(data[i]);
+			System.out.println();
+		}
+	}
+	
+	// ====================测试代码====================
+	void Test(String testName, char[] input, int num)
+	{
+	    if(testName != null)
+	        System.out.println(testName+" begins with Rotate number "+num);
+	    Print(input);
+	    LeftRotateString(input, num);
+	    Print(input);
+	}
+	public void Test1()
+	{
+		Test("Test1","abcdefg".toCharArray(),2);
+	}
+	
+	public static void main(String[] args)
+	{
+		T58_02_LeftRotateString main=new T58_02_LeftRotateString();
+		//功能测试
+		main.Test("Test1","abcdefg".toCharArray(),0);
+		main.Test("Test2","abcdefg".toCharArray(),1);
+		main.Test("Test3","abcdefg".toCharArray(),6);
+		main.Test("Test4","abcdefg".toCharArray(),7);
+		main.Test("Test5","abcdefg".toCharArray(),8);
+		//空指针
+		main.Test("Test6", null, 6);
+	}
+}
