@@ -1,0 +1,55 @@
+package offer;
+
+public class T57_02_ContinuousSquenceWithSum {
+	public void FindContinuousSequence(int sum)
+	{
+		if(sum<3)
+			return;
+		int small=1;
+		int big=2;
+		int middle=(sum+1)/2;
+		int curSum=small+big;
+		while(small<middle)
+		{
+			if(curSum==sum)
+				Print(small,big);
+			while(curSum>sum && small<middle)
+			{
+				curSum-=small;
+				small++;
+				if(curSum==sum)
+					Print(small,big);
+			}
+			big++;
+			curSum+=big;
+		}
+	}
+	public void Print(int small,int big)
+	{
+		for(int i=small;i<=big;i++)
+			System.out.print(i+" ");
+		System.out.println();
+	}
+	
+	// ====================测试代码====================
+	public void Test(String testName, int sum)
+	{
+	    if(testName != null)
+	    	System.out.println(testName+" for "+sum+" begins: ");
+
+	    FindContinuousSequence(sum);
+	}
+	public static void main(String[] args)
+	{
+		T57_02_ContinuousSquenceWithSum main=new T57_02_ContinuousSquenceWithSum();
+		//存在
+		//main.Test("test1", 9);
+		//main.Test("test2", 100);
+		//不存在
+		main.Test("test3", 4);
+		main.Test("test4", 0);
+		//边界测试
+		main.Test("test4", 3);
+	}
+
+}
